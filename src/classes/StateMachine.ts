@@ -1,8 +1,8 @@
-import GameState from "./states/GameState";
+import TransitioningState from "./states/TransitioningState";
 import PlayerTurn from "./states/PlayerTurn";
 import Game from "./Game";
 export default class StateMachine {
-  private _currentState : GameState | undefined;
+  private _currentState : TransitioningState | undefined;
   private readonly _states: any;
     constructor(game : Game) {
       this._states = {
@@ -10,7 +10,7 @@ export default class StateMachine {
       }
     }
 
-  transitionTo(state : GameState) {
+  transitionTo(state : TransitioningState) {
     if (this._currentState !== undefined){
       this._currentState.onExit();
     }

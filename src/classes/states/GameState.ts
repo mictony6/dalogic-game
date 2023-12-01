@@ -1,21 +1,8 @@
 import Game from "../Game";
 
 export default class GameState {
-    game: Game;
+  private game: Game;
   constructor(game: Game) {
     this.game = game;
   }
-  onEnter(){
-
-  }
-
-  onExit(){
-
-  }
-
-  onUpdate(delta : number){
-
-  }
 }
-
-
