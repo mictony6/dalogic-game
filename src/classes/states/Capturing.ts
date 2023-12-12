@@ -14,6 +14,8 @@ export default class Capturing extends GameState implements TransitioningState {
       capturedPiece,
     );
 
+    movingPiece.player.addScore(movingPiece.pieceValue);
+
     console.log("removing piece");
     this.game.currentPlayer.removePiece(selectedMove.capturedPiece!);
     this.game.board.removePieceFromBoard(
@@ -22,7 +24,9 @@ export default class Capturing extends GameState implements TransitioningState {
     );
   }
 
-  onExit(): void {}
+  onExit(): void {
+    console.log(this.game.currentPlayer.score);
+  }
 
   onUpdate(delta: number): void {
     const selectedMove = this.game.currentPlayer.selectedMove!;
