@@ -11,6 +11,7 @@ export default class Player {
   selectedPiece: Piece | null | undefined;
   public isTurn = false;
   direction: number;
+  public score: number = 0;
   constructor(color: number, id: number) {
     this.color = color;
     this.id = id;
@@ -93,5 +94,9 @@ export default class Player {
   removeSelections() {
     this.deselectPiece(this.selectedPiece!);
     this.deselectTile(this.selectedTile!);
+  }
+
+  addScore(val: number) {
+    this.score += val;
   }
 }

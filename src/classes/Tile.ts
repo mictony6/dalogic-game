@@ -9,6 +9,7 @@ import {
 } from "pixi.js";
 import * as OPERATIONS from "./Operation";
 import { isTileWhite } from "./helpers";
+import Piece from "./Piece";
 
 let operations: Function[] = [
   OPERATIONS.AND,
@@ -91,5 +92,9 @@ export default class Tile {
 
   resetColor() {
     this._sprite!.texture = this.defaultTexture!;
+  }
+
+  performOperation(a: Piece, b: Piece) {
+    return this.operation(a.pieceValue, b.pieceValue);
   }
 }

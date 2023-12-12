@@ -5,7 +5,6 @@ import Piece from "./Piece";
 export default class Move {
   isValid: boolean = false;
   isCapture: boolean = false;
-  captureDest: BoardPosition | null = null;
   capturedPiece: Piece | null = null;
   movingPiece: Piece | null;
 
