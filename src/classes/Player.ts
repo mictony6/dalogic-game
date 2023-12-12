@@ -1,7 +1,7 @@
 import Piece from "./Piece";
 import Tile from "./Tile";
 import Board from "./Board";
-import Move from "./Move";
+import { isTileWhite } from "./helpers";
 
 export default class Player {
   color: number;
@@ -64,7 +64,7 @@ export default class Player {
       this.deselectTile(this.selectedTile);
     }
 
-    if (this.selectedPiece) {
+    if (this.selectedPiece && isTileWhite(tile.row, tile.column)) {
       this.selectedTile = tile;
     }
   }

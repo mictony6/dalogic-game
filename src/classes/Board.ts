@@ -34,10 +34,10 @@ export default class Board {
 
   initPieces(app: Application<ICanvas>, player1: Player, player2: Player) {
     // generate pieces for player 2
-    for (let row = 0; row < 3; row++) {
+    for (let row = 0; row < (this.rows - 2) / 2; row++) {
       for (let column = 0; column < this.columns; column++) {
         if (isTileWhite(row, column)) {
-          const piece = new Piece(row, column, player1);
+          const piece = new Piece(row, column, player2);
           piece.init(app);
           if (piece.sprite) this.container.addChild(piece.sprite);
           this.setPiecePosition(row, column, piece);
@@ -45,19 +45,14 @@ export default class Board {
           player2.addPiece(piece);
           piece.assignTo(player2);
         }
-      }
-    }
 
-    // generate pieces for player 1
-    for (let row = 5; row < 8; row++) {
-      for (let column = 0; column < this.columns; column++) {
-        if (isTileWhite(row, column)) {
-          const piece = new Piece(row, column, player2);
+        if (isTileWhite(this.rows - 1 - row, column)) {
+          const piece = new Piece(this.rows - 1 - row, column, player1);
           piece.init(app);
           if (piece.sprite) this.container.addChild(piece.sprite);
-          this.setPiecePosition(row, column, piece);
+          this.setPiecePosition(this.rows - 1 - row, column, piece);
           // ownership of the piece is assigned to player 2
-          player1.addPiece(piece);
+          player2.addPiece(piece);
           piece.assignTo(player1);
         }
       }
