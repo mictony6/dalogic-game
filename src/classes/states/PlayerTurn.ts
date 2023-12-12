@@ -1,5 +1,6 @@
 import TransitioningState from "./TransitioningState";
 import GameState from "./GameState";
+import Game from "../Game";
 
 export default class PlayerTurn
   extends GameState
@@ -13,5 +14,11 @@ export default class PlayerTurn
     console.log("Exiting PlayerTurn State");
   }
 
-  onUpdate(_delta: number) {}
+  onUpdate(_delta: number) {
+    const currentPlayer = this.game.currentPlayer;
+
+    if (currentPlayer.readyToMove()) {
+      this.game.stateMachine.transitionTo(this.game.stateMachine.states.moving);
+    }
+  }
 }

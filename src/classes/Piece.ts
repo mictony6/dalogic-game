@@ -1,14 +1,17 @@
 import { Application, Graphics, Sprite, Text } from "pixi.js";
 import Player from "./Player";
+import Move from "./Move";
 
 export default class Piece {
-  private row: number;
-  private column: number;
+  row: number;
+  column: number;
   private readonly size: number;
   private _sprite: Sprite | undefined;
   private _player: Player;
   private _pieceValue: number = 0;
   private text: Text | undefined;
+  public validMoves: Move[] = [];
+
   constructor(row: number, column: number, player: any) {
     this.row = row;
     this.column = column;
@@ -69,5 +72,13 @@ export default class Piece {
 
   get pieceValue() {
     return this._pieceValue;
+  }
+
+  get direction() {
+    return this.player.direction;
+  }
+
+  isOpponentOf(piece: Piece | null) {
+    return piece?.player !== this.player;
   }
 }

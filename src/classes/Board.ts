@@ -3,15 +3,15 @@ import Tile from "./Tile";
 import Piece from "./Piece";
 import Player from "./Player";
 import { isTileWhite } from "./helpers";
+import BoardPosition from "./BoardPosition";
+import Move from "./Move";
 
 export default class Board {
   private rows = 8;
   private columns = 8;
   private container: Container = new Container();
-  private grid: any[] = [];
+  private grid: Array<BoardPosition[]> = [];
   public tiles: Tile[] = [];
-  private selectedTile: Tile | null | undefined;
-  private selectedPiece: Piece | null | undefined;
 
   constructor(private app: Application) {}
 
@@ -25,54 +25,40 @@ export default class Board {
       for (let column = 0; column < this.columns; column++) {
         const tile = new Tile(row, column);
         tile.init(this.app);
-        if (tile.sprite !== undefined) {
-          this.container.addChild(tile.sprite);
-        }
-        this.grid[row][column] = { tile: tile, piece: null };
+        if (tile.sprite) this.container.addChild(tile.sprite);
+        this.grid[row][column] = new BoardPosition(tile, null);
         this.tiles.push(tile);
       }
     }
   }
 
   initPieces(app: Application<ICanvas>, player1: Player, player2: Player) {
-    // generate pieces for player 1
+    // generate pieces for player 2
     for (let row = 0; row < 3; row++) {
       for (let column = 0; column < this.columns; column++) {
         if (isTileWhite(row, column)) {
           const piece = new Piece(row, column, player1);
           piece.init(app);
-          if (piece.sprite !== undefined) this.container.addChild(piece.sprite);
+          if (piece.sprite) this.container.addChild(piece.sprite);
           this.setPiecePosition(row, column, piece);
           // ownership of the piece is assigned to player 1
-          player1.addPiece(piece);
-          piece.assignTo(player1);
-
-          // set event listeners for the piece
-          piece.sprite!.eventMode = "static";
-          piece.sprite!.on("pointerdown", () => {
-            this.selectPiece(piece);
-          });
+          player2.addPiece(piece);
+          piece.assignTo(player2);
         }
       }
     }
 
-    // generate pieces for player 2
+    // generate pieces for player 1
     for (let row = 5; row < 8; row++) {
       for (let column = 0; column < this.columns; column++) {
         if (isTileWhite(row, column)) {
           const piece = new Piece(row, column, player2);
           piece.init(app);
-          if (piece.sprite !== undefined) this.container.addChild(piece.sprite);
+          if (piece.sprite) this.container.addChild(piece.sprite);
           this.setPiecePosition(row, column, piece);
           // ownership of the piece is assigned to player 2
-          player2.addPiece(piece);
-          piece.assignTo(player2);
-
-          // set event listeners for the piece
-          piece.sprite!.eventMode = "static";
-          piece.sprite!.on("pointerdown", () => {
-            this.selectPiece(piece);
-          });
+          player1.addPiece(piece);
+          piece.assignTo(player1);
         }
       }
     }
@@ -86,39 +72,75 @@ export default class Board {
     return this.grid[row][column].piece;
   }
 
+  /**
+   * Updates the boards grid and sets the piece's position.
+   * Use this rather than the piece's setPosition method.
+   * @param row
+   * @param column
+   * @param piece
+   */
   setPiecePosition(row: number, column: number, piece: Piece) {
+    this.grid[piece.row][piece.column].piece = null;
     this.grid[row][column].piece = piece;
     piece.setPosition(row, column);
   }
 
   removePieceFromBoard(row: number, column: number) {
     const piece = this.getPiece(row, column);
-    this.grid[row][column].piece = null;
-    this.container.removeChild(piece.sprite);
-  }
-
-  selectPiece(piece: Piece) {
-    if (this.selectedPiece) {
-      this.deselectPiece(this.selectedPiece);
+    if (piece) {
+      this.grid[row][column].piece = null;
+      this.container.removeChild(piece.sprite!);
     }
-    this.selectedPiece = piece;
-
-    piece.sprite!.scale.set(1.2);
   }
 
-  deselectPiece(piece: Piece) {
-    piece.sprite!.scale.set(1);
-    this.selectedPiece = null;
-  }
-
-  selectTile(tile: Tile) {
-    if (this.selectedTile) {
-      this.deselectTile(this.selectedTile);
+  /**
+   * Return the tile or piece at the specified position.
+   * Bound checking should be done before calling the method.
+   * @returns {BoardPosition}
+   * @param position
+   */
+  getBoardContentAt(position: number[]): BoardPosition {
+    if (!this.inBounds(position)) {
+      throw Error(`Position [${position[0]}, ${position[1]}]out of bounds`);
     }
-    this.selectedTile = tile;
+    return this.grid[position[0]][position[1]];
   }
 
-  deselectTile(_tile: Tile) {
-    this.selectedTile = null;
+  inBounds(position: number[]) {
+    return (
+      0 <= position[0] &&
+      position[0] < this.rows &&
+      0 <= position[1] &&
+      position[1] < this.columns
+    );
+  }
+
+  updateValidMovesForPiece(piece: Piece) {
+    piece.validMoves = [];
+    const currentPosition = this.getBoardContentAt([piece.row, piece.column]);
+
+    const forwardLeft = [piece.row + piece.direction, piece.column - 1];
+    if (this.inBounds(forwardLeft)) {
+      let fL = new Move(
+        currentPosition,
+        this.getBoardContentAt(forwardLeft),
+        this,
+      );
+      if (fL.isValid) {
+        piece.validMoves.push(fL);
+      }
+    }
+
+    const forwardRight = [piece.row + piece.direction, piece.column + 1];
+    if (this.inBounds(forwardRight)) {
+      let fR = new Move(
+        currentPosition,
+        this.getBoardContentAt(forwardRight),
+        this,
+      );
+      if (fR.isValid) {
+        piece.validMoves.push(fR);
+      }
+    }
   }
 }

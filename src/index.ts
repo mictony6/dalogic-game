@@ -3,7 +3,7 @@ import Game from "./classes/Game";
 import "./styles.css";
 
 const app = new PIXI.Application({
-  background: "#74bbde",
+  background: "#586770",
   width: 75 * 8,
   height: 75 * 8,
   antialias: true,

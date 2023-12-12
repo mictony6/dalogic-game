@@ -1,7 +1,7 @@
 import Game from "../Game";
 
 export default class GameState {
-  private game: Game;
+  protected game: Game;
   constructor(game: Game) {
     this.game = game;
   }

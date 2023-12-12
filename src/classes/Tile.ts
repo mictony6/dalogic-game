@@ -2,6 +2,7 @@ import {
   Application,
   Graphics,
   ICanvas,
+  RenderTexture,
   Sprite,
   Text,
   TextStyle,
@@ -17,13 +18,15 @@ let operations: Function[] = [
 ];
 export default class Tile {
   _sprite: Sprite | undefined;
-  private readonly row: number;
-  private readonly size: number;
-  private readonly column: number;
-  private readonly color: number;
-  private readonly id: number;
+  readonly row: number;
+  readonly size: number;
+  readonly column: number;
+  readonly color: number;
+  readonly id: number;
   private operation: Function;
   private text: Text | undefined;
+  private defaultTexture: RenderTexture | undefined;
+  private highlightTexture: RenderTexture | undefined;
 
   constructor(row: number, column: number) {
     this.row = row;
@@ -40,7 +43,14 @@ export default class Tile {
     texture.drawRect(0, 0, this.size, this.size);
     texture.endFill();
 
-    this._sprite = new Sprite(app.renderer.generateTexture(texture));
+    this.defaultTexture = app.renderer.generateTexture(texture);
+    texture.clear();
+    texture.beginFill(0x00aa00);
+    texture.drawRect(0, 0, this.size, this.size);
+    texture.endFill();
+    this.highlightTexture = app.renderer.generateTexture(texture);
+
+    this._sprite = new Sprite(this.defaultTexture);
     this._sprite.y = this.row * this.size;
     this._sprite.x = this.column * this.size;
 
@@ -73,5 +83,13 @@ export default class Tile {
         this.text.position.set(centerX, this.text.y);
       }
     }
+  }
+
+  highlight() {
+    this._sprite!.texture = this.highlightTexture!;
+  }
+
+  resetColor() {
+    this._sprite!.texture = this.defaultTexture!;
   }
 }
