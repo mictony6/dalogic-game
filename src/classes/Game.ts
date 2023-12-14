@@ -85,4 +85,11 @@ export default class Game {
       console.log("No more moves to undo");
     }
   }
+
+  isOver() {
+    return (
+      this.board.getAllValidMoves(this.players[0]).length === 0 ||
+      this.board.getAllValidMoves(this.players[1]).length === 0
+    );
+  }
 }

@@ -7,8 +7,8 @@ import BoardPosition from "./BoardPosition";
 import Move from "./Move";
 
 export default class Board {
-  private rows = 8;
-  private columns = 8;
+  private rows = 5;
+  private columns = 5;
   private container: Container = new Container();
   private grid: Array<BoardPosition[]> = [];
   public tiles: Tile[] = [];
@@ -89,6 +89,7 @@ export default class Board {
     const piece = this.getPiece(row, column);
     if (piece) {
       this.grid[row][column].piece = null;
+      this.pieces = this.pieces.filter((p) => p != piece);
       this.container.removeChild(piece.sprite!);
     }
   }
@@ -129,6 +130,7 @@ export default class Board {
     const piece = position.piece;
     if (piece) {
       this.removePieceFromBoard(piece.row, piece.column);
+      this.pieces = this.pieces.filter((p) => p != piece);
     }
   }
 
@@ -139,6 +141,7 @@ export default class Board {
     }
     this.grid[position.tile.row][position.tile.column].piece = piece;
     piece.setPosition(position.tile.row, position.tile.column);
+    this.pieces.push(piece);
     this.container.addChild(piece.sprite!);
   }
 }
