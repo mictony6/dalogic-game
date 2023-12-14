@@ -3,8 +3,6 @@ import Player from "./Player";
 import StateMachine from "./StateMachine";
 import { Application, ICanvas, Ticker } from "pixi.js";
 import Move from "./Move";
-import RandomAI from "./RandomAI";
-import MiniMaxAI from "./MiniMaxAI";
 import AlphaBetaAI from "./AlphaBetaAI";
 
 export default class Game {

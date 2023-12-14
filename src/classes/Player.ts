@@ -1,7 +1,6 @@
 import Piece from "./Piece";
 import Tile from "./Tile";
 import Board from "./Board";
-import { isTileWhite } from "./helpers";
 import Move from "./Move";
 import Game from "./Game";
 

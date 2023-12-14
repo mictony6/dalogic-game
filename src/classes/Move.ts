@@ -21,8 +21,7 @@ export default class Move {
   getCapturedPosition(board: Board) {
     const row = (this.srcPos.tile.row + this.destPos.tile.row) / 2;
     const column = (this.srcPos.tile.column + this.destPos.tile.column) / 2;
-    const capturedPos = board.getBoardPosition([row, column])!;
-    return capturedPos;
+    return board.getBoardPosition([row, column])!;
   }
 
   execute(board: Board) {

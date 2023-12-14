@@ -1,6 +1,5 @@
 import TransitioningState from "./TransitioningState";
 import GameState from "./GameState";
-import Game from "../Game";
 
 export default class PlayerTurn
   extends GameState
