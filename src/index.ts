@@ -30,4 +30,5 @@ const undoButton = document.getElementById("undoButton")!;
 undoButton.onclick = () => {
   game.undo();
 };
+
 game.startGame();

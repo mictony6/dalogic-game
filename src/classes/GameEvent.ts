@@ -1,18 +1,32 @@
+import Player from "./Player";
+
 /**
  * Class representing a game event
  */
 export class GameEvent {
   name = "default";
   id = 0;
-  details = {};
   /**
    * @param {String} name
    * @param {Number} id
-   * @param details
    */
-  constructor(name: string, id: number, details = {}) {
+  constructor(name: string, id: number) {
     this.name = name;
     this.id += id;
-    this.details = details;
+  }
+}
+
+/**
+ * Class representing a score event
+ */
+export class ScoreEvent extends GameEvent {
+  scoringPlayer: Player | undefined;
+  /**
+   *
+   * @param {Player} scoringPlayer
+   */
+  constructor(scoringPlayer: Player) {
+    super("score", 1);
+    this.scoringPlayer = scoringPlayer;
   }
 }

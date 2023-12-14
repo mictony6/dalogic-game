@@ -1,10 +1,10 @@
-import {GameEvent} from "./GameEvent";
+import { GameEvent } from "./GameEvent";
 
 /**
  * Allows to register callbacks for specific events.
  */
-export default class GameEventMListener {
-  listeners :{[index:string]:any} = {};
+export class GameEventListener {
+  listeners: { [index: string]: any } = {};
 
   /**
    * Add an event listener for a specific event type.
@@ -12,9 +12,9 @@ export default class GameEventMListener {
    * @param {Function} callback - The callback function to
    * be invoked when the event occurs.
    */
-  on(eventName: string , callback: Function) {
+  on(eventName: string, callback: Function) {
     // Check if the event type already has listeners
-    if (this.listeners[eventName] === undefined){
+    if (this.listeners[eventName] === undefined) {
       this.listeners[eventName] = [];
     }
 
@@ -29,9 +29,11 @@ export default class GameEventMListener {
    * invoked when the event occurs.
    */
   off(eventName: string | number, callback: Function) {
-    const listeners: Function[]  = this.listeners[eventName];
+    const listeners: Function[] = this.listeners[eventName];
     if (listeners) {
-      this.listeners[eventName] = listeners.filter((cb: Function) => cb !== callback);
+      this.listeners[eventName] = listeners.filter(
+        (cb: Function) => cb !== callback,
+      );
       if (this.listeners[eventName].length === 0) {
         delete this.listeners[eventName];
       }
@@ -42,14 +44,14 @@ export default class GameEventMListener {
    * Executes all the callbacks listening to the event.
    * @param {GameEvent} event
    */
-  trigger(event : GameEvent) {
+  trigger(event: GameEvent) {
     /**
      * @type {Function[]}
      */
     const listeners: Function[] = this.listeners[event.name];
 
     if (listeners) {
-      listeners.forEach((callback : Function) => callback(event));
+      listeners.forEach((callback: Function) => callback(event));
     }
   }
 }
