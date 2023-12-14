@@ -4,6 +4,7 @@ import GameState from "./GameState";
 export default class Moving extends GameState implements TransitioningState {
   onEnter(): void {
     console.log("Moving...");
+    this.game.moveHistory.push(this.game.currentPlayer.selectedMove!);
   }
 
   onExit(): void {}
@@ -24,7 +25,7 @@ export default class Moving extends GameState implements TransitioningState {
           this.game.stateMachine.states.switchTurn,
         );
       } else {
-        this.game.makeMove(currentPlayer.selectedMove);
+        currentPlayer.selectedMove.execute(this.game.board);
       }
     }
   }

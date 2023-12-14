@@ -124,4 +124,21 @@ export default class Board {
     });
     return moves;
   }
+
+  removePieceAtPosition(position: BoardPosition) {
+    const piece = position.piece;
+    if (piece) {
+      this.removePieceFromBoard(piece.row, piece.column);
+    }
+  }
+
+  addPieceAtPosition(piece: Piece, position: BoardPosition) {
+    // check if position is empty
+    if (position.piece) {
+      throw new Error("Position is not empty");
+    }
+    this.grid[position.tile.row][position.tile.column].piece = piece;
+    piece.setPosition(position.tile.row, position.tile.column);
+    this.container.addChild(piece.sprite!);
+  }
 }

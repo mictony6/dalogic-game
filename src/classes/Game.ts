@@ -9,6 +9,7 @@ export default class Game {
   private readonly players: Player[];
   stateMachine: StateMachine;
   currentPlayer: Player;
+  moveHistory: Move[] = [];
   constructor(private app: Application<ICanvas>) {
     this.board = new Board(app);
     this.board.initBoard();
@@ -62,12 +63,6 @@ export default class Game {
     Ticker.shared.start();
   }
 
-  makeMove(move: Move) {
-    this.board.movePiecePosition(move.srcPos.piece!, move.destPos);
-  }
-
-  undoMove() {}
-
   update(delta: number) {
     if (
       this.stateMachine.currentState &&
@@ -79,5 +74,15 @@ export default class Game {
 
   getPlayers() {
     return this.players;
+  }
+
+  undo() {
+    let lastMove = this.moveHistory.pop();
+    if (lastMove) {
+      lastMove.undo(this.board);
+      this.stateMachine.transitionTo(this.stateMachine.states.switchTurn);
+    } else {
+      console.log("No more moves to undo");
+    }
   }
 }

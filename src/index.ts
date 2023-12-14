@@ -26,4 +26,8 @@ if (canvasStyle instanceof CSSStyleDeclaration) {
 }
 
 const game = new Game(app);
+const undoButton = document.getElementById("undoButton")!;
+undoButton.onclick = () => {
+  game.undo();
+};
 game.startGame();
