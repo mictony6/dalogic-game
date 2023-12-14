@@ -9,19 +9,23 @@ export default class Moving extends GameState implements TransitioningState {
   onExit(): void {}
 
   onUpdate(delta: number): void {
-    const selectedMove = this.game.currentPlayer.selectedMove!;
-    if (selectedMove.isCapture) {
-      this.game.stateMachine.transitionTo(
-        this.game.stateMachine.states.capturing,
-      );
-    }
-    this.game.makeMove(selectedMove);
-    if (selectedMove.isDone()) {
-      this.game.currentPlayer.removeSelections();
+    const currentPlayer = this.game.currentPlayer;
+    if (currentPlayer && currentPlayer.selectedMove) {
+      // check if move is done by checking if the piece is at the destination
+      const piece = currentPlayer.selectedMove.destPos.piece;
+      if (piece) {
+        piece.validMoves?.forEach((move) => {
+          move.destPos.tile.resetColor();
+        });
 
-      this.game.stateMachine.transitionTo(
-        this.game.stateMachine.states.switchTurn,
-      );
+        currentPlayer.resetSelections();
+
+        this.game.stateMachine.transitionTo(
+          this.game.stateMachine.states.switchTurn,
+        );
+      } else {
+        this.game.makeMove(currentPlayer.selectedMove);
+      }
     }
   }
 }

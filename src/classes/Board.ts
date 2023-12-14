@@ -12,6 +12,7 @@ export default class Board {
   private container: Container = new Container();
   private grid: Array<BoardPosition[]> = [];
   public tiles: Tile[] = [];
+  public pieces: Piece[] = [];
 
   constructor(private app: Application) {}
 
@@ -40,20 +41,25 @@ export default class Board {
           const piece = new Piece(row, column, player2);
           piece.init(app);
           if (piece.sprite) this.container.addChild(piece.sprite);
-          this.setPiecePosition(row, column, piece);
+          this.movePiecePosition(piece, this.getBoardPosition([row, column])!);
           // ownership of the piece is assigned to player 1
-          player2.addPiece(piece);
           piece.assignTo(player2);
+
+          this.pieces.push(piece);
         }
 
         if (isTileWhite(this.rows - 1 - row, column)) {
           const piece = new Piece(this.rows - 1 - row, column, player1);
           piece.init(app);
           if (piece.sprite) this.container.addChild(piece.sprite);
-          this.setPiecePosition(this.rows - 1 - row, column, piece);
+          this.movePiecePosition(
+            piece,
+            this.getBoardPosition([this.rows - 1 - row, column])!,
+          );
           // ownership of the piece is assigned to player 2
-          player2.addPiece(piece);
           piece.assignTo(player1);
+
+          this.pieces.push(piece);
         }
       }
     }
@@ -70,14 +76,13 @@ export default class Board {
   /**
    * Updates the boards grid and sets the piece's position.
    * Use this rather than the piece's setPosition method.
-   * @param row
-   * @param column
    * @param piece
+   * @param position
    */
-  setPiecePosition(row: number, column: number, piece: Piece) {
+  movePiecePosition(piece: Piece, position: BoardPosition) {
     this.grid[piece.row][piece.column].piece = null;
-    this.grid[row][column].piece = piece;
-    piece.setPosition(row, column);
+    position.piece = piece;
+    piece.setPosition(position.tile.row, position.tile.column);
   }
 
   removePieceFromBoard(row: number, column: number) {
@@ -94,9 +99,9 @@ export default class Board {
    * @returns {BoardPosition}
    * @param position
    */
-  getBoardContentAt(position: number[]): BoardPosition {
+  getBoardPosition(position: number[]): BoardPosition | null {
     if (!this.inBounds(position)) {
-      throw Error(`Position [${position[0]}, ${position[1]}]out of bounds`);
+      return null;
     }
     return this.grid[position[0]][position[1]];
   }
@@ -110,32 +115,13 @@ export default class Board {
     );
   }
 
-  updateValidMovesForPiece(piece: Piece) {
-    piece.validMoves = [];
-    const currentPosition = this.getBoardContentAt([piece.row, piece.column]);
-
-    const forwardLeft = [piece.row + piece.direction, piece.column - 1];
-    if (this.inBounds(forwardLeft)) {
-      let fL = new Move(
-        currentPosition,
-        this.getBoardContentAt(forwardLeft),
-        this,
-      );
-      if (fL.isValid) {
-        piece.validMoves.push(fL);
-      }
-    }
-
-    const forwardRight = [piece.row + piece.direction, piece.column + 1];
-    if (this.inBounds(forwardRight)) {
-      let fR = new Move(
-        currentPosition,
-        this.getBoardContentAt(forwardRight),
-        this,
-      );
-      if (fR.isValid) {
-        piece.validMoves.push(fR);
-      }
-    }
+  getAllValidMoves(player: Player) {
+    const moves: Move[] = [];
+    const pieces = this.pieces.filter((piece) => player.owns(piece));
+    pieces.forEach((piece) => {
+      const validMoves = piece.getValidMoves(this);
+      moves.push(...validMoves);
+    });
+    return moves;
   }
 }

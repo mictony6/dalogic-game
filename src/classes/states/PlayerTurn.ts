@@ -16,8 +16,7 @@ export default class PlayerTurn
 
   onUpdate(_delta: number) {
     const currentPlayer = this.game.currentPlayer;
-
-    if (currentPlayer.readyToMove()) {
+    if (currentPlayer && currentPlayer.selectedMove) {
       this.game.stateMachine.transitionTo(this.game.stateMachine.states.moving);
     }
   }

@@ -2,29 +2,23 @@ import Piece from "./Piece";
 import Tile from "./Tile";
 import Board from "./Board";
 import { isTileWhite } from "./helpers";
+import Move from "./Move";
+
+const playerDebug = document.getElementById("playerDebug")!;
 
 export default class Player {
   color: number;
-  pieces: Piece[];
   id: number;
-  private selectedTile: Tile | null | undefined;
+  selectedTile: Tile | null | undefined;
   selectedPiece: Piece | null | undefined;
   public isTurn = false;
   direction: number;
   public score: number = 0;
+  selectedMove: Move | undefined;
   constructor(color: number, id: number) {
     this.color = color;
     this.id = id;
-    this.pieces = [];
     this.direction = this.id === 0 ? -1 : 1;
-  }
-
-  addPiece(piece: Piece) {
-    this.pieces.push(piece);
-  }
-
-  removePiece(piece: Piece) {
-    this.pieces = this.pieces.filter((p) => p !== piece);
   }
 
   owns(piece: Piece) {
@@ -32,40 +26,49 @@ export default class Player {
   }
 
   selectPiece(piece: Piece, board: Board) {
-    // if its the players turn
-    if (!this.isTurn) {
-      return;
-    }
+    if (!this.isTurn) return;
 
-    // replace selected piece if it exists
+    // check if may selected piece
     if (this.selectedPiece) {
+      //if meron deselect
       this.deselectPiece(this.selectedPiece);
     }
+    // set selectedPiece
+    // get valid moves for selectedpiece
+
     this.selectedPiece = piece;
-
-    piece.sprite!.scale.set(1.1);
-
-    board.updateValidMovesForPiece(piece);
-    piece.validMoves.forEach((move) => {
-      move.destTile.highlight();
+    const moves = this.selectedPiece.getValidMoves(board);
+    moves.forEach((move) => {
+      move.destPos.tile.highlight();
     });
+
+    playerDebug.innerHTML = `Player ${this.id} selected piece at ${piece.row}, ${piece.column}`;
   }
 
   deselectPiece(piece: Piece) {
-    piece.sprite!.scale.set(1);
-    piece.validMoves.forEach((move) => {
-      move.destTile.resetColor();
-    });
-    this.selectedPiece = null;
+    // if may selectedpiece, set it to null
+    if (this.selectedPiece) {
+      this.selectedPiece.validMoves?.forEach((move) => {
+        move.destPos.tile.resetColor();
+      });
+      this.selectedPiece.validMoves = [];
+      this.selectedPiece = null;
+    }
+    // also removed valid moves
   }
 
   selectTile(tile: Tile, board: Board) {
+    if (!this.isTurn) return;
     if (this.selectedTile) {
       this.deselectTile(this.selectedTile);
     }
-
-    if (this.selectedPiece && isTileWhite(tile.row, tile.column)) {
+    // check if may selected piece
+    if (this.selectedPiece) {
+      const selectedMove = this.selectedPiece.validMoves!.find(
+        (move) => move.destPos.tile === tile,
+      );
       this.selectedTile = tile;
+      this.selectedMove = selectedMove;
     }
   }
 
@@ -73,30 +76,13 @@ export default class Player {
     this.selectedTile = null;
   }
 
-  readyToMove() {
-    return (
-      this.isTurn &&
-      this.selectedTile &&
-      this.selectedPiece &&
-      this.selectedMove
-    );
-  }
-
-  get selectedMove() {
-    const selectedMove = this.selectedPiece!.validMoves.find(
-      (move) => move.destTile === this.selectedTile!,
-    );
-    if (selectedMove) {
-      return selectedMove;
-    }
-  }
-
-  removeSelections() {
-    this.deselectPiece(this.selectedPiece!);
-    this.deselectTile(this.selectedTile!);
-  }
-
   addScore(val: number) {
     this.score += val;
+  }
+
+  resetSelections() {
+    this.deselectPiece(this.selectedPiece!);
+    this.deselectTile(this.selectedTile!);
+    this.selectedMove = undefined;
   }
 }

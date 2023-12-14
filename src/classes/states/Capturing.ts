@@ -4,39 +4,11 @@ import TransitioningState from "./TransitioningState";
 export default class Capturing extends GameState implements TransitioningState {
   onEnter(): void {
     console.log("Capturing...");
-
-    const selectedMove = this.game.currentPlayer.selectedMove!;
-    const movingPiece = selectedMove.movingPiece!;
-    const capturedPiece = selectedMove.capturedPiece!;
-
-    movingPiece.pieceValue = selectedMove.destTile.performOperation(
-      movingPiece,
-      capturedPiece,
-    );
-
-    movingPiece.player.addScore(movingPiece.pieceValue);
-
-    console.log("removing piece");
-    this.game.currentPlayer.removePiece(selectedMove.capturedPiece!);
-    this.game.board.removePieceFromBoard(
-      selectedMove.capturedPiece!.row,
-      selectedMove.capturedPiece!.column,
-    );
   }
 
   onExit(): void {
     console.log(this.game.currentPlayer.score);
   }
 
-  onUpdate(delta: number): void {
-    const selectedMove = this.game.currentPlayer.selectedMove!;
-
-    this.game.makeMove(selectedMove);
-    if (selectedMove.isDone()) {
-      this.game.currentPlayer.removeSelections();
-      this.game.stateMachine.transitionTo(
-        this.game.stateMachine.states.switchTurn,
-      );
-    }
-  }
+  onUpdate(delta: number): void {}
 }

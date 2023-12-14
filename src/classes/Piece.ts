@@ -1,6 +1,7 @@
 import { Application, Graphics, Sprite, Text } from "pixi.js";
 import Player from "./Player";
 import Move from "./Move";
+import Board from "./Board";
 
 export default class Piece {
   row: number;
@@ -10,8 +11,7 @@ export default class Piece {
   private _player: Player;
   private _pieceValue: number = 0;
   private text: Text | undefined;
-  public validMoves: Move[] = [];
-
+  validMoves: Move[] | undefined;
   constructor(row: number, column: number, player: any) {
     this.row = row;
     this.column = column;
@@ -80,5 +80,56 @@ export default class Piece {
 
   isOpponentOf(piece: Piece | null) {
     return piece?.player !== this.player;
+  }
+
+  getValidMoves(board: Board) {
+    const moves: Move[] = [];
+    const srcPos = board.getBoardPosition([this.row, this.column]);
+    if (srcPos === null || srcPos.piece == null) {
+      throw new Error("Invalid srcPos");
+    }
+
+    const leftDest = board.getBoardPosition([
+      this.row + this.direction,
+      this.column - 1,
+    ]);
+
+    if (leftDest) {
+      // check destination piece exist and is an opponents piece
+      if (leftDest.piece && this.isOpponentOf(leftDest.piece)) {
+        const leftJumpDest = board.getBoardPosition([
+          this.row + this.direction * 2,
+          this.column - 2,
+        ]);
+        // if jump destination is valid and empty, add to moves
+        if (leftJumpDest && !leftJumpDest.piece) {
+          moves.push(new Move(srcPos, leftJumpDest));
+        }
+      } else if (!leftDest.piece) {
+        moves.push(new Move(srcPos, leftDest));
+      }
+    }
+    const rightDest = board.getBoardPosition([
+      this.row + this.direction,
+      this.column + 1,
+    ]);
+
+    if (rightDest) {
+      // check destination piece exist and is an opponents piece
+      if (rightDest.piece && this.isOpponentOf(rightDest.piece)) {
+        const rightJumpDest = board.getBoardPosition([
+          this.row + this.direction * 2,
+          this.column + 2,
+        ]);
+        // if jump destination is valid and empty, add to moves
+        if (rightJumpDest && !rightJumpDest.piece) {
+          moves.push(new Move(srcPos, rightJumpDest));
+        }
+      } else if (!rightDest.piece) {
+        moves.push(new Move(srcPos, rightDest));
+      }
+    }
+    this.validMoves = moves;
+    return moves;
   }
 }

@@ -33,7 +33,7 @@ export default class Game {
   }
 
   createListenersForPieces() {
-    const pieces = [...this.players[0].pieces, ...this.players[1].pieces];
+    const pieces = this.board.pieces;
     pieces.forEach((piece) => {
       if (piece.sprite) {
         piece.sprite.eventMode = "static";
@@ -63,10 +63,7 @@ export default class Game {
   }
 
   makeMove(move: Move) {
-    const piece = move.movingPiece!;
-    const destTile = move.destTile;
-
-    this.board.setPiecePosition(destTile.row, destTile.column, piece);
+    this.board.movePiecePosition(move.srcPos.piece!, move.destPos);
   }
 
   undoMove() {}
