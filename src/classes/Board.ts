@@ -7,8 +7,8 @@ import BoardPosition from "./BoardPosition";
 import Move from "./Move";
 
 export default class Board {
-  private rows = 5;
-  private columns = 5;
+  private rows = 8;
+  private columns = 8;
   private container: Container = new Container();
   private grid: Array<BoardPosition[]> = [];
   public tiles: Tile[] = [];

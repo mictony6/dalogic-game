@@ -7,13 +7,16 @@ export default class PlayerTurn
   implements TransitioningState
 {
   onEnter() {
-    console.log("Entering PlayerTurn State");
-    this.game.currentPlayer.perform(this.game);
+    if (this.game.isOver()) {
+      this.game.stateMachine.transitionTo(
+        this.game.stateMachine.states.gameOver,
+      );
+    } else {
+      this.game.currentPlayer.perform(this.game);
+    }
   }
 
-  onExit() {
-    console.log("Exiting PlayerTurn State");
-  }
+  onExit() {}
 
   onUpdate(_delta: number) {
     const currentPlayer = this.game.currentPlayer;

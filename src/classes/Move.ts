@@ -4,6 +4,7 @@ import Piece from "./Piece";
 
 export default class Move {
   public capturePiece: Piece | null | undefined;
+  private addedScore: number = 0;
   constructor(
     public srcPos: BoardPosition,
     public destPos: BoardPosition,
@@ -30,10 +31,18 @@ export default class Move {
       this.capturePiece = capturedPos.piece;
       board.removePieceAtPosition(capturedPos);
       const movingPlayer = this.srcPos.piece!.player;
-      movingPlayer.addScore(1);
-      console.log(
-        `Player ${movingPlayer.id} score is now ${movingPlayer.score}`,
+
+      this.addedScore = this.destPos.tile.performOperation(
+        this.srcPos.piece!,
+        this.capturePiece!,
       );
+
+      // this.srcPos.piece!.pieceValue = this.addedScore;
+
+      movingPlayer.addScore(this.addedScore);
+      // console.log(
+      //   `Player ${movingPlayer.id} score is now ${movingPlayer.score}`,
+      // );
     }
     board.movePiecePosition(this.srcPos.piece!, this.destPos);
   }
@@ -50,10 +59,10 @@ export default class Move {
 
       if (this.srcPos.piece) {
         const movingPlayer = this.srcPos.piece.player;
-        movingPlayer.addScore(-1);
-        console.log(
-          `Player ${movingPlayer.id} score is now ${movingPlayer.score}`,
-        );
+        movingPlayer.addScore(-this.addedScore);
+        // console.log(
+        //   `Player ${movingPlayer.id} score is now ${movingPlayer.score}`,
+        // );
       }
     }
   }

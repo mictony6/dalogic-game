@@ -4,6 +4,8 @@ import StateMachine from "./StateMachine";
 import { Application, ICanvas, Ticker } from "pixi.js";
 import Move from "./Move";
 import RandomAI from "./RandomAI";
+import MiniMaxAI from "./MiniMaxAI";
+import AlphaBetaAI from "./AlphaBetaAI";
 
 export default class Game {
   board: Board;
@@ -30,8 +32,8 @@ export default class Game {
   }
 
   createPlayers() {
-    const player1 = new Player(0xf9731c, 0);
-    const player2 = new RandomAI(0xeec811, 1);
+    const player1 = new AlphaBetaAI(0xf9731c, 0, 3);
+    const player2 = new AlphaBetaAI(0xeec811, 1, 6);
     return [player1, player2];
   }
 
@@ -93,6 +95,25 @@ export default class Game {
       this.gameIsOver ||
       this.board.getAllValidMoves(this.players[0]).length === 0 ||
       this.board.getAllValidMoves(this.players[1]).length === 0
+    );
+  }
+
+  evaluate() {
+    const otherPlayer = this.players.find((p) => p != this.currentPlayer)!;
+    let p1NumOfPieces = 0;
+    let p2NumOfPieces = 0;
+
+    this.board.pieces.forEach((piece) => {
+      if (piece.player === this.currentPlayer) {
+        p1NumOfPieces += 1;
+      } else {
+        p2NumOfPieces += 1;
+      }
+    });
+    return (
+      this.currentPlayer.score -
+      otherPlayer.score +
+      (p1NumOfPieces - p2NumOfPieces) * 0.25
     );
   }
 }

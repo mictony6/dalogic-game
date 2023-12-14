@@ -6,7 +6,6 @@ export default class SwitchTurn
   implements TransitioningState
 {
   onEnter(): void {
-    console.log("Switching players");
     const prev = this.game.currentPlayer!;
     prev.isTurn = false;
     const players = this.game.getPlayers();
@@ -19,7 +18,7 @@ export default class SwitchTurn
   }
 
   onExit(): void {
-    console.log(`current player : Player ${this.game.currentPlayer.id}`);
+    // console.log(`current player : Player ${this.game.currentPlayer.id}`);
   }
 
   onUpdate(delta: number): void {
