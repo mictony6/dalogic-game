@@ -8,6 +8,7 @@ export default class PlayerTurn
 {
   onEnter() {
     console.log("Entering PlayerTurn State");
+    this.game.currentPlayer.perform(this.game);
   }
 
   onExit() {

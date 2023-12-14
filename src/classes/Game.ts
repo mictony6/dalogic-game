@@ -3,6 +3,7 @@ import Player from "./Player";
 import StateMachine from "./StateMachine";
 import { Application, ICanvas, Ticker } from "pixi.js";
 import Move from "./Move";
+import RandomAI from "./RandomAI";
 
 export default class Game {
   board: Board;
@@ -10,6 +11,7 @@ export default class Game {
   stateMachine: StateMachine;
   currentPlayer: Player;
   moveHistory: Move[] = [];
+  gameIsOver: boolean = false;
   constructor(private app: Application<ICanvas>) {
     this.board = new Board(app);
     this.board.initBoard();
@@ -29,7 +31,7 @@ export default class Game {
 
   createPlayers() {
     const player1 = new Player(0xf9731c, 0);
-    const player2 = new Player(0xeec811, 1);
+    const player2 = new RandomAI(0xeec811, 1);
     return [player1, player2];
   }
 
@@ -88,6 +90,7 @@ export default class Game {
 
   isOver() {
     return (
+      this.gameIsOver ||
       this.board.getAllValidMoves(this.players[0]).length === 0 ||
       this.board.getAllValidMoves(this.players[1]).length === 0
     );

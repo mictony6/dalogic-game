@@ -3,6 +3,7 @@ import Tile from "./Tile";
 import Board from "./Board";
 import { isTileWhite } from "./helpers";
 import Move from "./Move";
+import Game from "./Game";
 
 const playerDebug = document.getElementById("playerDebug")!;
 
@@ -85,4 +86,6 @@ export default class Player {
     this.deselectTile(this.selectedTile!);
     this.selectedMove = undefined;
   }
+
+  perform(game: Game) {}
 }
