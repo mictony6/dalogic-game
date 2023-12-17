@@ -1,5 +1,6 @@
 import TransitioningState from "./TransitioningState";
 import GameState from "./GameState";
+import Piece from "../Piece";
 
 export default class Moving extends GameState implements TransitioningState {
   onEnter(): void {
@@ -12,7 +13,9 @@ export default class Moving extends GameState implements TransitioningState {
     const currentPlayer = this.game.currentPlayer;
     if (currentPlayer && currentPlayer.selectedMove) {
       // check if move is done by checking if the piece is at the destination
-      const piece = currentPlayer.selectedMove.destPos.piece;
+      const piece = currentPlayer.selectedMove.destPos.piece
+        ? currentPlayer.selectedMove.destPos.piece
+        : currentPlayer.selectedMove.promotedPiece;
       if (piece) {
         piece.validMoves?.forEach((move) => {
           move.destPos.tile.resetColor();

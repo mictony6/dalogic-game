@@ -13,6 +13,7 @@ export default class Board {
   private grid: Array<BoardPosition[]> = [];
   public tiles: Tile[] = [];
   public pieces: Piece[] = [];
+  private removedPieces: Piece[] = [];
 
   constructor(private app: Application) {}
 
@@ -91,6 +92,7 @@ export default class Board {
       this.grid[row][column].piece = null;
       this.pieces = this.pieces.filter((p) => p != piece);
       this.container.removeChild(piece.sprite!);
+      this.removedPieces.push(piece);
     }
   }
 
@@ -143,5 +145,9 @@ export default class Board {
     piece.setPosition(position.tile.row, position.tile.column);
     this.pieces.push(piece);
     this.container.addChild(piece.sprite!);
+  }
+
+  get size() {
+    return this.rows;
   }
 }
