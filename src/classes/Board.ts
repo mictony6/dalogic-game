@@ -92,7 +92,6 @@ export default class Board {
       this.grid[row][column].piece = null;
       this.pieces = this.pieces.filter((p) => p != piece);
       this.container.removeChild(piece.sprite!);
-      this.removedPieces.push(piece);
     }
   }
 
