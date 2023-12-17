@@ -6,6 +6,7 @@ import Move from "./Move";
 import AlphaBetaAI from "./AlphaBetaAI";
 import RandomAI from "./RandomAI";
 import MiniMaxAI from "./MiniMaxAI";
+import * as PIXI from "pixi.js";
 class GameMode {
   constructor(
     public PlayerVsPlayer = 0,
@@ -23,7 +24,30 @@ export default class Game {
   moveHistory: Move[] = [];
   gameIsOver: boolean = false;
   gameMode = GAMEMODE.AIVsAI;
-  constructor(private app: Application<ICanvas>) {
+  constructor(size: number) {
+    const app = new PIXI.Application({
+      background: "#586770",
+      width: 75 * size,
+      height: 75 * size,
+      antialias: true,
+      autoStart: false,
+      sharedTicker: true,
+    });
+
+    // @ts-ignore
+    globalThis.__PIXI_APP__ = app;
+
+    const centerDiv = document.getElementById("center");
+
+    const canvasStyle = app.renderer.view.style;
+    if (canvasStyle instanceof CSSStyleDeclaration) {
+      canvasStyle.position = "absolute";
+      // @ts-ignore
+      centerDiv!.appendChild(app.view);
+    } else {
+      console.error("canvas style is not an instance of CSSStyleDeclaration");
+    }
+
     this.board = new Board(app);
     this.board.initBoard();
     this.players = this.createPlayers();
