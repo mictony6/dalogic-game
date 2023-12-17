@@ -1,7 +1,8 @@
-import { Application, Graphics, Sprite, Text } from "pixi.js";
+import { Application, Graphics, Sprite, Text, Ticker } from "pixi.js";
 import Player from "./Player";
 import Move from "./Move";
 import Board from "./Board";
+import BoardPosition from "./BoardPosition";
 
 export default class Piece {
   row: number;
@@ -131,5 +132,41 @@ export default class Piece {
     }
     this.validMoves = moves;
     return moves;
+  }
+
+  /**
+   * Private function to move the piece a bit towards the destination in a certain speed
+   * @param {Object} destination
+   */
+  moveTowards(dest: BoardPosition) {
+    const SPEED = 5;
+    const { deltaTime } = Ticker.shared;
+    this._sprite!.x = this.moveToward(
+      this._sprite!.x,
+      dest.tile.sprite!.x,
+      SPEED * deltaTime,
+    );
+    this._sprite!.y = this.moveToward(
+      this._sprite!.y,
+      dest.tile.sprite!.y,
+      SPEED * deltaTime,
+    );
+  }
+
+  moveToward(from: number, to: number, delta: number) {
+    const diff = to - from;
+
+    const direction = diff > 0 ? 1 : diff < 0 ? -1 : 0;
+
+    // Calculate the absolute difference
+    const absDiff = Math.abs(diff);
+
+    // Check if the absolute difference is less than or equal to the specified delta
+    if (absDiff <= delta || absDiff < Number.EPSILON) {
+      // If so, return the target value
+      return to;
+    }
+    // Otherwise, calculate the new position by moving towards the target
+    return from + direction * delta;
   }
 }

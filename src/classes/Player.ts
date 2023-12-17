@@ -4,8 +4,6 @@ import Board from "./Board";
 import Move from "./Move";
 import Game from "./Game";
 
-const playerDebug = document.getElementById("playerDebug")!;
-
 export default class Player {
   color: number;
   id: number;
@@ -41,8 +39,6 @@ export default class Player {
     moves.forEach((move) => {
       move.destPos.tile.highlight();
     });
-
-    playerDebug.innerHTML = `Player ${this.id} selected piece at ${piece.row}, ${piece.column}`;
   }
 
   deselectPiece(piece: Piece) {

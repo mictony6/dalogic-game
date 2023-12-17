@@ -24,7 +24,16 @@ export default class Moving extends GameState implements TransitioningState {
           this.game.stateMachine.states.switchTurn,
         );
       } else {
-        currentPlayer.selectedMove.execute(this.game.board);
+        const movingPiece = currentPlayer.selectedMove.srcPos.piece!;
+        movingPiece.moveTowards(currentPlayer.selectedMove.destPos);
+        if (
+          movingPiece.sprite!.x ===
+            currentPlayer.selectedMove.destPos.tile.sprite!.x &&
+          movingPiece.sprite!.y ===
+            currentPlayer.selectedMove.destPos.tile.sprite!.y
+        ) {
+          currentPlayer.selectedMove.execute(this.game.board);
+        }
       }
     }
   }

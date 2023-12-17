@@ -4,7 +4,17 @@ import StateMachine from "./StateMachine";
 import { Application, ICanvas, Ticker } from "pixi.js";
 import Move from "./Move";
 import AlphaBetaAI from "./AlphaBetaAI";
+import RandomAI from "./RandomAI";
+import MiniMaxAI from "./MiniMaxAI";
+class GameMode {
+  constructor(
+    public PlayerVsPlayer = 0,
+    public PlayerVsAI = 1,
+    public AIVsAI = 3,
+  ) {}
+}
 
+const GAMEMODE = new GameMode();
 export default class Game {
   board: Board;
   private readonly players: Player[];
@@ -12,6 +22,7 @@ export default class Game {
   currentPlayer: Player;
   moveHistory: Move[] = [];
   gameIsOver: boolean = false;
+  gameMode = GAMEMODE.AIVsAI;
   constructor(private app: Application<ICanvas>) {
     this.board = new Board(app);
     this.board.initBoard();
@@ -21,7 +32,7 @@ export default class Game {
     // initially set the currentPlayer to player 1 so we can start the game switching to player 0
     this.currentPlayer = this.players[1];
 
-    // set the listeners for our pieces
+    // set the listeners for our piece
     this.createListenersForPieces();
     this.createListenerForTiles();
 
@@ -30,15 +41,32 @@ export default class Game {
   }
 
   createPlayers() {
-    const player1 = new AlphaBetaAI(0xf9731c, 0, 3);
-    const player2 = new AlphaBetaAI(0xeec811, 1, 6);
-    return [player1, player2];
+    let player1: Player;
+    let player2: Player;
+    if (this.gameMode === GAMEMODE.PlayerVsPlayer) {
+      player1 = new Player(0xf9731c, 0);
+      player2 = new Player(0xeec811, 1);
+    } else if (this.gameMode === GAMEMODE.PlayerVsAI) {
+      player1 = new Player(0xf9731c, 0);
+      player2 = new AlphaBetaAI(0xeec811, 1, 9);
+    } else if (this.gameMode === GAMEMODE.AIVsAI) {
+      player1 = new AlphaBetaAI(0xf9731c, 0, 9);
+      player2 = new AlphaBetaAI(0xeec811, 1, 9);
+    }
+    return [player1!, player2!];
   }
 
   createListenersForPieces() {
     const pieces = this.board.pieces;
     pieces.forEach((piece) => {
       if (piece.sprite) {
+        if (
+          piece.player instanceof RandomAI ||
+          piece.player instanceof MiniMaxAI ||
+          piece.player instanceof AlphaBetaAI
+        ) {
+          return;
+        }
         piece.sprite.eventMode = "static";
         piece.sprite.on("pointerdown", () => {
           piece.player.selectPiece(piece, this.board);

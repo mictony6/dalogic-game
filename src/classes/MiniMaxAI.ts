@@ -3,7 +3,7 @@ import Game from "./Game";
 import Move from "./Move";
 
 export default class MiniMaxAI extends Player {
-  private depth: number;
+  private readonly depth: number;
   constructor(color: number, id: number, depth: number) {
     super(color, id);
     this.depth = depth;
