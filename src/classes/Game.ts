@@ -1,21 +1,13 @@
 import Board from "./Board";
 import Player from "./Player";
 import StateMachine from "./StateMachine";
-import { Application, ICanvas, Ticker } from "pixi.js";
+import { Ticker } from "pixi.js";
 import Move from "./Move";
 import AlphaBetaAI from "./AlphaBetaAI";
 import RandomAI from "./RandomAI";
 import MiniMaxAI from "./MiniMaxAI";
 import * as PIXI from "pixi.js";
-class GameMode {
-  constructor(
-    public PlayerVsPlayer = 0,
-    public PlayerVsAI = 1,
-    public AIVsAI = 3,
-  ) {}
-}
-
-const GAMEMODE = new GameMode();
+import { GAMEMODE } from "./helpers";
 export default class Game {
   board: Board;
   private readonly players: Player[];
@@ -23,8 +15,10 @@ export default class Game {
   currentPlayer: Player;
   moveHistory: Move[] = [];
   gameIsOver: boolean = false;
-  gameMode = GAMEMODE.AIVsAI;
-  constructor(size: number) {
+  constructor(
+    size: number,
+    private gameMode: number,
+  ) {
     const app = new PIXI.Application({
       background: "#586770",
       width: 75 * size,
@@ -53,7 +47,7 @@ export default class Game {
     this.players = this.createPlayers();
     this.board.initPieces(app, this.players[0], this.players[1]);
 
-    // initially set the currentPlayer to player 1 so we can start the game switching to player 0
+    // initially set the currentPlayer to player 1,  so we can start the game switching to player 0
     this.currentPlayer = this.players[1];
 
     // set the listeners for our piece
