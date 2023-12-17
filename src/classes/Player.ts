@@ -6,17 +6,16 @@ import Game from "./Game";
 
 export default class Player {
   color: number;
-  id: number;
+  id: number | string;
   selectedTile: Tile | null | undefined;
   selectedPiece: Piece | null | undefined;
   public isTurn = false;
-  direction: number;
+  direction: number = 1;
   public score: number = 0;
   selectedMove: Move | undefined;
   constructor(color: number, id: number) {
     this.color = color;
     this.id = id;
-    this.direction = this.id === 0 ? -1 : 1;
   }
 
   owns(piece: Piece) {
@@ -80,6 +79,10 @@ export default class Player {
     this.deselectPiece(this.selectedPiece!);
     this.deselectTile(this.selectedTile!);
     this.selectedMove = undefined;
+  }
+
+  setDirection(direction: number) {
+    this.direction = direction;
   }
 
   perform(game: Game) {}

@@ -10,7 +10,7 @@ export default class Board {
   private rows = 8;
   private columns = 8;
   private container: Container = new Container();
-  private grid: Array<BoardPosition[]> = [];
+  grid: Array<BoardPosition[]> = [];
   public tiles: Tile[] = [];
   public pieces: Piece[] = [];
   private removedPieces: Piece[] = [];
@@ -148,5 +148,62 @@ export default class Board {
 
   get size() {
     return this.rows;
+  }
+
+  convertPieceRepToPiece(
+    players: Player[],
+    myPieces: {
+      row: number;
+      column: number;
+      value: number;
+      playerId: string;
+    }[],
+    otherPieces: {
+      row: number;
+      column: number;
+      value: number;
+      playerId: string;
+    }[],
+  ) {
+    // set my pieces to the correct position on the bottom of the board
+    myPieces.forEach((pieceRep) => {
+      pieceRep.row = 7 - pieceRep.row;
+      pieceRep.column = 7 - pieceRep.column;
+    });
+
+    // generate actual pieces
+    myPieces.forEach((pieceRep) => {
+      const player = players.find((p) => p.id === pieceRep.playerId);
+      if (!player) {
+        throw new Error("Player not found");
+      }
+      const piece = new Piece(pieceRep.row, pieceRep.column, player);
+      piece.init(this.app);
+      this.movePiecePosition(
+        piece,
+        this.getBoardPosition([piece.row, piece.column])!,
+      );
+      piece.pieceValue = pieceRep.value;
+      piece.assignTo(player);
+      this.pieces.push(piece);
+      this.container.addChild(piece.sprite!);
+    });
+
+    otherPieces.forEach((pieceRep) => {
+      const player = players.find((p) => p.id === pieceRep.playerId);
+      if (!player) {
+        throw new Error("Player not found");
+      }
+      const piece = new Piece(pieceRep.row, pieceRep.column, player);
+      piece.init(this.app);
+      this.movePiecePosition(
+        piece,
+        this.getBoardPosition([piece.row, piece.column])!,
+      );
+      piece.pieceValue = pieceRep.value;
+      piece.assignTo(player);
+      this.pieces.push(piece);
+      this.container.addChild(piece.sprite!);
+    });
   }
 }

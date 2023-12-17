@@ -1,7 +1,7 @@
 import Board from "./Board";
 import Player from "./Player";
 import StateMachine from "./StateMachine";
-import { Ticker } from "pixi.js";
+import { Application, ICanvas, Ticker } from "pixi.js";
 import Move from "./Move";
 import AlphaBetaAI from "./AlphaBetaAI";
 import RandomAI from "./RandomAI";
@@ -10,11 +10,12 @@ import * as PIXI from "pixi.js";
 import { GAMEMODE } from "./helpers";
 export default class Game {
   board: Board;
-  private readonly players: Player[];
+  players!: Player[];
   stateMachine: StateMachine;
-  currentPlayer: Player;
+  currentPlayer!: Player;
   moveHistory: Move[] = [];
   gameIsOver: boolean = false;
+  private app: Application<ICanvas> | undefined;
   constructor(
     size: number,
     private gameMode: number,
@@ -28,6 +29,7 @@ export default class Game {
       sharedTicker: true,
     });
 
+    this.app = app;
     // @ts-ignore
     globalThis.__PIXI_APP__ = app;
 
@@ -44,18 +46,7 @@ export default class Game {
 
     this.board = new Board(app);
     this.board.initBoard();
-    this.players = this.createPlayers();
-    this.board.initPieces(app, this.players[0], this.players[1]);
-
-    // initially set the currentPlayer to player 1,  so we can start the game switching to player 0
-    this.currentPlayer = this.players[1];
-
-    // set the listeners for our piece
-    this.createListenersForPieces();
-    this.createListenerForTiles();
-
     this.stateMachine = new StateMachine(this);
-    this.stateMachine.transitionTo(this.stateMachine.states.switchTurn);
   }
 
   createPlayers() {
@@ -71,7 +62,7 @@ export default class Game {
       player1 = new AlphaBetaAI(0xf9731c, 0, 7);
       player2 = new AlphaBetaAI(0xeec811, 1, 7);
     }
-    return [player1!, player2!];
+    this.players = [player1!, player2!];
   }
 
   createListenersForPieces() {
@@ -107,6 +98,17 @@ export default class Game {
   }
 
   startGame() {
+    console.log(this.getPlayers());
+    console.log(this.board.getPiece(0, 0)?.getValidMoves(this.board));
+    // initially set the currentPlayer to player 1,  so we can start the game switching to player 0
+    this.currentPlayer = this.players[1];
+
+    // set the listeners for our piece
+    this.createListenersForPieces();
+    this.createListenerForTiles();
+
+    this.stateMachine.transitionTo(this.stateMachine.states.switchTurn);
+
     Ticker.shared.add(this.update.bind(this));
     Ticker.shared.start();
   }
@@ -159,5 +161,9 @@ export default class Game {
       otherPlayer.score +
       (p1NumOfPieces - p2NumOfPieces) * 0.25
     );
+  }
+
+  setPlayers(player1: Player, player2: Player) {
+    this.players = [player1, player2];
   }
 }
