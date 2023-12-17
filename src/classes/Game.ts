@@ -50,7 +50,7 @@ export default class Game {
       player1 = new Player(0xf9731c, 0);
       player2 = new AlphaBetaAI(0xeec811, 1, 9);
     } else if (this.gameMode === GAMEMODE.AIVsAI) {
-      player1 = new AlphaBetaAI(0xf9731c, 0, 5);
+      player1 = new AlphaBetaAI(0xf9731c, 0, 7);
       player2 = new AlphaBetaAI(0xeec811, 1, 7);
     }
     return [player1!, player2!];
