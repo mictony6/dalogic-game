@@ -26,10 +26,11 @@ socket.on("disconnect", () => {
 });
 
 let game = new Game(8, GAMEMODE.PlayerVsPlayer);
-function startGame() {
+function startGame(playerId: string) {
   console.log(game.getPlayers());
-  game.currentPlayer = game.players[1];
+  game.currentPlayer = game.players.find((p) => p.id !== playerId)!;
   game.stateMachine.transitionTo(game.stateMachine.states.switchTurn);
+  console.log(game.currentPlayer);
   game.startGame();
 }
 
@@ -42,7 +43,8 @@ socket.on("startGame", (gameData) => {
   // generate actual pieces
   game.board.convertPieceRepToPiece(game.getPlayers(), myPieces, otherPieces);
 
-  startGame(); // Call the function to initialize the game
+  let currentPlayer = gameData.currentPlayer;
+  startGame(currentPlayer); // Call the function to initialize the game
 });
 
 // Handle match found event
@@ -73,5 +75,31 @@ function playerReady() {
 }
 
 gameEventListener.on("stateChange", (e: StateChangeEvent) => {
-  socket.emit("stateChange");
+  socket.emit("stateChange", e.state);
+});
+
+gameEventListener.on("move", (e: MoveEvent) => {
+  let moveData = {
+    player: game.currentPlayer.id,
+    srcPos: { row: e.move.srcPos.tile.row, column: e.move.srcPos.tile.column },
+    destPos: {
+      row: e.move.destPos.tile.row,
+      column: e.move.destPos.tile.column,
+    },
+  };
+  socket.emit("move", moveData);
+});
+
+socket.on("move", (moveData) => {
+  let srcPos = game.board.getBoardPosition([
+    moveData.srcPos.row,
+    moveData.srcPos.column,
+  ]);
+  let destPos = game.board.getBoardPosition([
+    moveData.destPos.row,
+    moveData.destPos.column,
+  ]);
+  let move = new Move(srcPos!, destPos!);
+  game.currentPlayer.selectPiece(srcPos!.piece!, game.board);
+  game.currentPlayer.selectTile(destPos!.tile, game.board);
 });

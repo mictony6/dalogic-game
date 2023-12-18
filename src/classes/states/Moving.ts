@@ -4,6 +4,7 @@ import { MoveEvent } from "../GameEvent";
 import Game from "../Game";
 
 export default class Moving implements TransitioningState {
+  name: string = "moving";
   onEnter(game: Game): void {
     game.moveHistory.push(game.currentPlayer.selectedMove!);
     gameEventListener.trigger(new MoveEvent(game.currentPlayer.selectedMove!));

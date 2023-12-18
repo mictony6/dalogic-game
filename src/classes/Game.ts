@@ -67,21 +67,23 @@ export default class Game {
 
   createListenersForPieces() {
     const pieces = this.board.pieces;
-    pieces.forEach((piece) => {
+    for (let piece of pieces) {
       if (piece.sprite) {
         if (
           piece.player instanceof RandomAI ||
           piece.player instanceof MiniMaxAI ||
-          piece.player instanceof AlphaBetaAI
+          piece.player instanceof AlphaBetaAI ||
+          piece.player === this.players[1]
         ) {
-          return;
+          piece.sprite.eventMode = "none";
+          continue;
         }
         piece.sprite.eventMode = "static";
         piece.sprite.on("pointerdown", () => {
           piece.player.selectPiece(piece, this.board);
         });
       }
-    });
+    }
   }
 
   createListenerForTiles() {

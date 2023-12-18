@@ -2,6 +2,8 @@ import TransitioningState from "./TransitioningState";
 import Game from "../Game";
 
 export default class SwitchTurn implements TransitioningState {
+  name: string = "switchTurn";
+
   onEnter(game: Game): void {
     const prev = game.currentPlayer!;
     prev.isTurn = false;

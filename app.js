@@ -59,7 +59,7 @@ function generateGameData(rows, columns) {
     }
   }
 
-  return { pieces: [...p1Pieces, ...p2Pieces] };
+  return { pieces: [...p1Pieces, ...p2Pieces], currentPlayer: player1 };
 }
 
 io.on("connection", (socket) => {
@@ -92,8 +92,17 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("stateChange", () => {
-    console.log("stateChange");
+  socket.on("stateChange", (stateData) => {
+    console.log(stateData);
+  });
+
+  socket.on("move", (moveData) => {
+    // invert the row and column of the move to be on the other side of the board
+    moveData.srcPos.row = 7 - moveData.srcPos.row;
+    moveData.srcPos.column = 7 - moveData.srcPos.column;
+    moveData.destPos.row = 7 - moveData.destPos.row;
+    moveData.destPos.column = 7 - moveData.destPos.column;
+    socket.broadcast.emit("move", moveData);
   });
 
   socket.on("disconnect", (reason) => {

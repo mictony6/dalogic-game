@@ -1,6 +1,7 @@
 import Game from "../Game";
 
 export default interface TransitioningState {
+  name: string;
   /**
    * Gets called once on enter
    */
