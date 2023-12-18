@@ -4,6 +4,9 @@ import { GAMEMODE } from "./classes/helpers";
 import { io } from "socket.io-client";
 import { Ticker } from "pixi.js";
 import Player from "./classes/Player";
+import gameEventListener from "./classes/GameEventListener";
+import Move from "./classes/Move";
+import { GameEvent, MoveEvent, StateChangeEvent } from "./classes/GameEvent";
 
 const trainButton = document.getElementById("trainButton")!;
 trainButton.onclick = () => {
@@ -24,6 +27,9 @@ socket.on("disconnect", () => {
 
 let game = new Game(8, GAMEMODE.PlayerVsPlayer);
 function startGame() {
+  console.log(game.getPlayers());
+  game.currentPlayer = game.players[1];
+  game.stateMachine.transitionTo(game.stateMachine.states.switchTurn);
   game.startGame();
 }
 
@@ -65,3 +71,7 @@ socket.on("joinSuccess", (socketId) => {
 function playerReady() {
   socket.emit("findMatch", player);
 }
+
+gameEventListener.on("stateChange", (e: StateChangeEvent) => {
+  socket.emit("stateChange");
+});

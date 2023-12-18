@@ -1,16 +1,19 @@
 import TransitioningState from "./TransitioningState";
 import GameState from "./GameState";
-import Piece from "../Piece";
+import gameEventListener from "../GameEventListener";
+import { MoveEvent } from "../GameEvent";
+import Game from "../Game";
 
 export default class Moving extends GameState implements TransitioningState {
-  onEnter(): void {
-    this.game.moveHistory.push(this.game.currentPlayer.selectedMove!);
+  onEnter(game: Game): void {
+    game.moveHistory.push(game.currentPlayer.selectedMove!);
+    gameEventListener.trigger(new MoveEvent(game.currentPlayer.selectedMove!));
   }
 
-  onExit(): void {}
+  onExit(game: Game): void {}
 
-  onUpdate(delta: number): void {
-    const currentPlayer = this.game.currentPlayer;
+  onUpdate(delta: number, game: Game): void {
+    const currentPlayer = game.currentPlayer;
     if (currentPlayer && currentPlayer.selectedMove) {
       // check if move is done by checking if the piece is at the destination
       const piece = currentPlayer.selectedMove.destPos.piece
@@ -23,9 +26,7 @@ export default class Moving extends GameState implements TransitioningState {
 
         currentPlayer.resetSelections();
 
-        this.game.stateMachine.transitionTo(
-          this.game.stateMachine.states.switchTurn,
-        );
+        game.stateMachine.transitionTo(game.stateMachine.states.switchTurn);
       } else {
         const movingPiece = currentPlayer.selectedMove.srcPos.piece!;
         movingPiece.moveTowards(currentPlayer.selectedMove.destPos);
@@ -35,7 +36,7 @@ export default class Moving extends GameState implements TransitioningState {
           movingPiece.sprite!.y ===
             currentPlayer.selectedMove.destPos.tile.sprite!.y
         ) {
-          currentPlayer.selectedMove.execute(this.game.board);
+          currentPlayer.selectedMove.execute(game.board);
         }
       }
     }

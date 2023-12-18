@@ -55,3 +55,7 @@ export class GameEventListener {
     }
   }
 }
+
+const gameEventListener = new GameEventListener();
+
+export default gameEventListener;

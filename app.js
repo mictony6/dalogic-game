@@ -81,7 +81,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("playerReady", (data) => {
-    console.log(data);
     readyPlayers.push(data.playerId);
     if (readyPlayers.length === 2) {
       let gameData = generateGameData(data.rows, data.columns);
@@ -93,6 +92,10 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("stateChange", () => {
+    console.log("stateChange");
+  });
+
   socket.on("disconnect", (reason) => {
     // Remove player from players array
     players = players.filter((player) => player.id !== socket.id);
@@ -102,12 +105,10 @@ io.on("connection", (socket) => {
 
 // Matchmaking function
 function matchPlayers() {
-  console.log(players.length);
   // Implement your matchmaking logic here
   // In this example, just match the first two available players
   if (players.length >= 2) {
     const matchedPlayers = players.splice(0, 2);
-    console.log(matchedPlayers);
     // Notify matched players
     matchedPlayers.forEach((player) => {
       io.to(player.id).emit("matchFound", matchedPlayers);

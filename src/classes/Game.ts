@@ -98,16 +98,9 @@ export default class Game {
   }
 
   startGame() {
-    console.log(this.getPlayers());
-    console.log(this.board.getPiece(0, 0)?.getValidMoves(this.board));
-    // initially set the currentPlayer to player 1,  so we can start the game switching to player 0
-    this.currentPlayer = this.players[1];
-
     // set the listeners for our piece
     this.createListenersForPieces();
     this.createListenerForTiles();
-
-    this.stateMachine.transitionTo(this.stateMachine.states.switchTurn);
 
     Ticker.shared.add(this.update.bind(this));
     Ticker.shared.start();
@@ -118,7 +111,7 @@ export default class Game {
       this.stateMachine.currentState &&
       this.stateMachine.currentState.onUpdate
     ) {
-      this.stateMachine.currentState.onUpdate(delta);
+      this.stateMachine.currentState.onUpdate(delta, this);
     }
   }
 
