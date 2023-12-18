@@ -1,10 +1,9 @@
 import TransitioningState from "./TransitioningState";
-import GameState from "./GameState";
 import gameEventListener from "../GameEventListener";
 import { MoveEvent } from "../GameEvent";
 import Game from "../Game";
 
-export default class Moving extends GameState implements TransitioningState {
+export default class Moving implements TransitioningState {
   onEnter(game: Game): void {
     game.moveHistory.push(game.currentPlayer.selectedMove!);
     gameEventListener.trigger(new MoveEvent(game.currentPlayer.selectedMove!));

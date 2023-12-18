@@ -1,8 +1,7 @@
-import GameState from "./GameState";
 import TransitioningState from "./TransitioningState";
 import Game from "../Game";
 
-export default class GameOver extends GameState implements TransitioningState {
+export default class GameOver implements TransitioningState {
   onEnter(game: Game): void {
     const player1 = game.getPlayers()[0];
     const player2 = game.getPlayers()[1];

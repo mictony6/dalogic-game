@@ -1,7 +1,6 @@
 import Player from "./Player";
 import Move from "./Move";
 import TransitioningState from "./states/TransitioningState";
-import GameState from "./states/GameState";
 
 /**
  * Class representing a game event

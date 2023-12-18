@@ -1,11 +1,7 @@
-import GameState from "./GameState";
 import TransitioningState from "./TransitioningState";
 import Game from "../Game";
 
-export default class SwitchTurn
-  extends GameState
-  implements TransitioningState
-{
+export default class SwitchTurn implements TransitioningState {
   onEnter(game: Game): void {
     const prev = game.currentPlayer!;
     prev.isTurn = false;
