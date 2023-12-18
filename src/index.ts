@@ -13,6 +13,9 @@ trainButton.onclick = () => {
   Ticker.shared.stop();
   game = new Game(8, GAMEMODE.PlayerVsAI);
   game.createPlayers();
+  game.board.initPieces(game.app, game.players[0], game.players[1]);
+  game.currentPlayer = game.players[1];
+  game.stateMachine.transitionTo(game.stateMachine.states.switchTurn);
   game.startGame();
 };
 

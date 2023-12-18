@@ -15,7 +15,7 @@ export default class Game {
   currentPlayer!: Player;
   moveHistory: Move[] = [];
   gameIsOver: boolean = false;
-  private app: Application<ICanvas> | undefined;
+  app: Application<ICanvas>;
   constructor(
     size: number,
     private gameMode: number,
@@ -62,6 +62,7 @@ export default class Game {
       player1 = new AlphaBetaAI(0xf9731c, 0, 7);
       player2 = new AlphaBetaAI(0xeec811, 1, 7);
     }
+    player1!.direction = -1;
     this.players = [player1!, player2!];
   }
 
