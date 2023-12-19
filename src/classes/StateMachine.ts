@@ -7,6 +7,7 @@ import GameOver from "./states/GameOver";
 import { StateChangeEvent } from "./GameEvent";
 import gameEventListener from "./GameEventListener";
 import OnMenu from "./states/OnMenu";
+import FindingMatch from "./states/FindingMatch";
 export default class StateMachine {
   private _currentState: TransitioningState | undefined;
   private readonly _states: any;
@@ -19,6 +20,7 @@ export default class StateMachine {
       moving: new Moving(),
       gameOver: new GameOver(),
       onMenu: new OnMenu(),
+      findingMatch: new FindingMatch(),
     };
   }
 

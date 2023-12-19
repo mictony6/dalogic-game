@@ -2,13 +2,18 @@ import Game from "./Game";
 import * as PIXI from "pixi.js";
 import startButtonImg from "../assets/startButton.png";
 import titleSpriteImg from "../assets/titleSprite.png";
+import Player from "./Player";
 export default class GUI {
   startMenu: PIXI.Container;
+  private gameOverScreen: PIXI.Container | null;
+  private waitingScreen: PIXI.Container;
   constructor(game: Game) {
-    this.startMenu = this.getMenu(game);
+    this.startMenu = this.createMenuScreen(game);
+    this.gameOverScreen = null;
+    this.waitingScreen = this.createWaitingScreen(game);
   }
 
-  getMenu(game: Game) {
+  createMenuScreen(game: Game) {
     let app = game.app;
     // Create a start menu container
     const startMenu = new PIXI.Container();
@@ -22,11 +27,7 @@ export default class GUI {
 
     // Create a title text
     const titleSprite = PIXI.Sprite.from(titleSpriteImg);
-    //     new PIXI.Text("Game Title", {
-    //   fontFamily: "Arial",
-    //   fontSize: 48,
-    //   fill: 0xffffff,
-    // });
+
     titleSprite.scale.set(0.25);
     titleSprite.anchor.set(0.5, 0.5);
     titleSprite.position.set(app.renderer.width / 2, 100);
@@ -60,6 +61,66 @@ export default class GUI {
     }
     game.startGame();
   }
-  showGameOver() {}
-  hideGameOver() {}
+  showGameOver(game: Game) {
+    const app = game.app;
+    this.gameOverScreen = this.createGameOverScreen(game);
+    app.stage.addChild(this.gameOverScreen);
+  }
+
+  hideGameOver(game: Game) {
+    if (this.gameOverScreen) {
+      game.app.stage.removeChild(this.gameOverScreen);
+    }
+    game.startGame();
+  }
+
+  showWaitingScreen(game: Game) {
+    const app = game.app;
+    app.stage.addChild(this.waitingScreen);
+  }
+
+  hideWaitingScreen(game: Game) {
+    if (this.waitingScreen) {
+      game.app.stage.removeChild(this.waitingScreen);
+    }
+    // Continue with the game or show the appropriate UI
+  }
+
+  private createGameOverScreen(game: Game) {
+    const app = game.app;
+    // Get the array of players
+    const players = game.getPlayers();
+
+    // Find the player with the highest score
+    const winner = players.reduce((prev, current) =>
+      prev.score > current.score ? prev : current,
+    );
+
+    // Create a game over text with winner information
+    const gameOverText = new PIXI.Text(
+      `Game Over\nWinner: Player ${winner.id}\nScore: ${winner.score}`,
+      {
+        fontFamily: "Arial",
+        fontSize: 36,
+        fill: 0xffffff,
+        align: "center",
+      },
+    );
+    gameOverText.anchor.set(0.5, 0.5);
+    gameOverText.position.set(app.renderer.width / 2, app.renderer.height / 2);
+
+    return gameOverText;
+  }
+
+  private createWaitingScreen(game: Game) {
+    const app = game.app;
+    const waitingText = new PIXI.Text("Waiting for Opponent", {
+      fontFamily: "Arial",
+      fontSize: 24,
+      fill: 0xffffff,
+    });
+    waitingText.anchor.set(0.5, 0.5);
+    waitingText.position.set(app.renderer.width / 2, app.renderer.height / 2);
+    return waitingText;
+  }
 }

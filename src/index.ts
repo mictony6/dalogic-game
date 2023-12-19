@@ -21,7 +21,19 @@ socket.on("disconnect", () => {
 // buttons hehe
 const trainButton = document.getElementById("trainButton")!;
 const findMatchButton = document.getElementById("findMatchButton")!;
+const aiMatchButton = document.getElementById("aiMatchButton")!;
+
 let game!: Game;
+
+aiMatchButton.onclick = () => {
+  if (game) {
+    game.removeFromStage();
+  }
+  game = new Game(8, GAMEMODE.AIVsAI);
+  game.createPlayers();
+  game.board.initPieces(game.app, game.players[0], game.players[1]);
+  game.stateMachine.transitionTo(game.stateMachine.states.onMenu);
+};
 
 // button listeners
 trainButton.onclick = () => {
@@ -53,7 +65,7 @@ socket.on("joinSuccess", (socketId) => {
 
 function playerReady() {
   socket.emit("findMatch", player);
-  game.stateMachine.transitionTo(game.stateMachine.states.onMenu);
+  game.stateMachine.transitionTo(game.stateMachine.states.findingMatch);
 }
 
 function startGame() {
