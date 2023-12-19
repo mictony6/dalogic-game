@@ -8,6 +8,7 @@ import RandomAI from "./RandomAI";
 import MiniMaxAI from "./MiniMaxAI";
 import * as PIXI from "pixi.js";
 import { GAMEMODE } from "./helpers";
+import GUI from "./GUI";
 export default class Game {
   board: Board;
   players!: Player[];
@@ -16,6 +17,7 @@ export default class Game {
   moveHistory: Move[] = [];
   gameIsOver: boolean = false;
   app: Application<ICanvas>;
+  gui: GUI;
   constructor(
     size: number,
     private gameMode: number,
@@ -37,7 +39,7 @@ export default class Game {
 
     const canvasStyle = app.renderer.view.style;
     if (canvasStyle instanceof CSSStyleDeclaration) {
-      canvasStyle.position = "absolute";
+      // canvasStyle.position = "absolute";
       // @ts-ignore
       centerDiv!.appendChild(app.view);
     } else {
@@ -47,6 +49,15 @@ export default class Game {
     this.board = new Board(app);
     this.board.initBoard();
     this.stateMachine = new StateMachine(this);
+    this.gui = new GUI(this);
+  }
+
+  removeFromStage() {
+    const centerDiv = document.getElementById("center")!;
+    // @ts-ignore
+    centerDiv.removeChild(this.app.view);
+    this.app.stage.removeChild(this.board.container);
+    Ticker.shared.stop();
   }
 
   createPlayers() {

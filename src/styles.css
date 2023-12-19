@@ -5,20 +5,41 @@
 
 }
 
-
+.container{
+    border: green 1px solid;
+}
 
 
 html{
     margin: 0;
     padding: 0;
+    background: white;
     font-size: 1rem;
     scroll-behavior: smooth;
 }
+
+
+
 body {
+    margin:0;
+    padding: 0;
+    min-height:100vh;
+    color: #fff;
+    background: #142814;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    flex-direction: row;
+    }
+
+ul {
+    list-style-type: none;
     margin: 0;
     padding: 0;
-    background: #142814;
-    color: #fff;
+}
+
+.fluid {
+    width:100% !important;
 }
 
 .container {
@@ -42,4 +63,9 @@ body {
     .container {
         width: 1170px;
     }
+}
+
+.main-wrapper{
+    display: flex;
+    flex-direction: row;
 }

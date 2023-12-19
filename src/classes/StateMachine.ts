@@ -6,6 +6,7 @@ import Moving from "./states/Moving";
 import GameOver from "./states/GameOver";
 import { StateChangeEvent } from "./GameEvent";
 import gameEventListener from "./GameEventListener";
+import OnMenu from "./states/OnMenu";
 export default class StateMachine {
   private _currentState: TransitioningState | undefined;
   private readonly _states: any;
@@ -17,6 +18,7 @@ export default class StateMachine {
       switchTurn: new SwitchTurn(),
       moving: new Moving(),
       gameOver: new GameOver(),
+      onMenu: new OnMenu(),
     };
   }
 

@@ -59,7 +59,7 @@ function generateGameData(rows, columns) {
     }
   }
 
-  return { pieces: [...p1Pieces, ...p2Pieces], currentPlayer: player1 };
+  return { pieces: [...p1Pieces, ...p2Pieces], currentPlayer: readyPlayers[0] };
 }
 
 io.on("connection", (socket) => {

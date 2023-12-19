@@ -9,7 +9,7 @@ import Move from "./Move";
 export default class Board {
   private rows = 8;
   private columns = 8;
-  private container: Container = new Container();
+  container: Container = new Container();
   grid: Array<BoardPosition[]> = [];
   public tiles: Tile[] = [];
   public pieces: Piece[] = [];

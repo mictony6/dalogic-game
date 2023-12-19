@@ -5,10 +5,14 @@ export default class SwitchTurn implements TransitioningState {
   name: string = "switchTurn";
 
   onEnter(game: Game): void {
-    const prev = game.currentPlayer!;
-    prev.isTurn = false;
-    const players = game.getPlayers();
-    game.currentPlayer = players.find((player) => player.id !== prev.id)!;
+    const prev = game.currentPlayer;
+    if (prev) {
+      prev.isTurn = false;
+      const players = game.getPlayers();
+      game.currentPlayer = players.find((player) => player.id !== prev.id)!;
+    } else {
+      game.currentPlayer = game.getPlayers()[0];
+    }
     if (game.currentPlayer) {
       game.currentPlayer.isTurn = true;
     } else {
