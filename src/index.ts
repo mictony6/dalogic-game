@@ -7,6 +7,9 @@ import Player from "./classes/Player";
 import gameEventListener from "./classes/GameEventListener";
 import Move from "./classes/Move";
 import { GameEvent, MoveEvent, StateChangeEvent } from "./classes/GameEvent";
+import bg from "./assets/bg.png";
+const body = document.querySelector("body")!;
+body.style.backgroundImage = `url(${bg})`;
 
 // socket connection
 const socket = io("http://localhost:3000");
