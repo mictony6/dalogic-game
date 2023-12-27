@@ -14,6 +14,16 @@ export default class Board {
   public tiles: Tile[] = [];
   public pieces: Piece[] = [];
   private removedPieces: Piece[] = [];
+  pieceValues = [
+    [3, 3, 3, 3],
+    [1, 2, 2, 1],
+    [1, 0, 0, 1],
+    [-1, -1, -1, -1],
+    [-1, -1, -1, -1],
+    [1, 0, 0, 1],
+    [1, 2, 2, 1],
+    [3, 3, 3, 3],
+  ];
 
   constructor(private app: Application) {}
 
@@ -45,6 +55,12 @@ export default class Board {
           this.movePiecePosition(piece, this.getBoardPosition([row, column])!);
           // ownership of the piece is assigned to player 1
           piece.assignTo(player2);
+          piece.pieceValue =
+            this.pieceValues[row][
+              Math.floor(Math.random() * this.pieceValues[row].length)
+            ];
+          let index = this.pieceValues[row].indexOf(piece.pieceValue);
+          this.pieceValues[row].splice(index, 1); // Remove the pieceValue
 
           this.pieces.push(piece);
         }
@@ -59,6 +75,16 @@ export default class Board {
           );
           // ownership of the piece is assigned to player 2
           piece.assignTo(player1);
+          piece.pieceValue =
+            this.pieceValues[this.rows - 1 - row][
+              Math.floor(
+                Math.random() * this.pieceValues[this.rows - 1 - row].length,
+              )
+            ];
+          let index = this.pieceValues[this.rows - 1 - row].indexOf(
+            piece.pieceValue,
+          );
+          this.pieceValues[this.rows - 1 - row].splice(index, 1); // Remove the pieceValue
 
           this.pieces.push(piece);
         }

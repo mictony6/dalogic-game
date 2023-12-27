@@ -1,9 +1,13 @@
 import Player from "./Player";
 import Game from "./Game";
 import Move from "./Move";
+import { socket } from "./helpers";
 
 export default class AlphaBetaAI extends Player {
   private depth: number;
+  iterations: number = 0;
+  numOfMoves = 0;
+  speedSum = 0;
   constructor(color: number, id: number, depth: number) {
     super(color, id);
     this.depth = depth;
@@ -12,9 +16,11 @@ export default class AlphaBetaAI extends Player {
     const start = performance.now();
     let [bestScore, bestMove] = this.minimax(game, this.depth, true, null)!;
     const end = performance.now();
-    console.log(
-      `Time taken by minimax with alpha-beta: ${end - start} milliseconds`,
-    );
+    // console.log(
+    //   `Time taken by minimax with alpha-beta: ${end - start} milliseconds`,
+    // );
+    this.numOfMoves += 1;
+    this.speedSum += end - start;
 
     if (bestMove && bestMove.srcPos.piece && bestMove.destPos.tile) {
       this.selectPiece(bestMove.srcPos.piece, game.board);
@@ -32,6 +38,7 @@ export default class AlphaBetaAI extends Player {
     alpha = -Infinity,
     beta = Infinity,
   ): [number, Move] {
+    this.iterations += 1;
     if (depth === 0 || game.isOver()) {
       if (position) {
         return [game.evaluate(), position];

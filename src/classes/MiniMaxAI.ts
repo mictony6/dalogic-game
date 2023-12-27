@@ -4,6 +4,9 @@ import Move from "./Move";
 
 export default class MiniMaxAI extends Player {
   private readonly depth: number;
+  iterations: number = 0;
+  numOfMoves = 0;
+  speedSum = 0;
   constructor(color: number, id: number, depth: number) {
     super(color, id);
     this.depth = depth;
@@ -13,6 +16,8 @@ export default class MiniMaxAI extends Player {
     let [bestScore, bestMove] = this.minimax(game, this.depth, true, null)!;
     const end = performance.now();
     console.log(`Time taken by minimax: ${end - start} milliseconds`);
+    this.numOfMoves += 1;
+    this.speedSum += end - start;
 
     if (bestMove && bestMove.srcPos.piece && bestMove.destPos.tile) {
       this.selectPiece(bestMove.srcPos.piece, game.board);
@@ -28,6 +33,7 @@ export default class MiniMaxAI extends Player {
     maximizingPlayer: boolean,
     position: Move | null,
   ): [number, Move] {
+    this.iterations += 1;
     if (depth === 0 || game.isOver()) {
       if (position) {
         return [game.evaluate(), position];

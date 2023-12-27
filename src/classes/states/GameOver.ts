@@ -1,5 +1,7 @@
 import TransitioningState from "./TransitioningState";
 import Game from "../Game";
+import AlphaBetaAI from "../AlphaBetaAI";
+import { GAMEMODE, socket } from "../helpers";
 
 export default class GameOver implements TransitioningState {
   name: string = "gameOver";
@@ -11,6 +13,7 @@ export default class GameOver implements TransitioningState {
     console.log(
       `Player ${player1.id} score is ${player1.score} || Player ${player2.id} score is ${player2.score}`,
     );
+
     game.gui.showGameOver(game);
   }
 

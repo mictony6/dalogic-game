@@ -2,7 +2,6 @@ import Game from "./Game";
 import * as PIXI from "pixi.js";
 import startButtonImg from "../assets/startButton.png";
 import titleSpriteImg from "../assets/titleSprite.png";
-import Player from "./Player";
 export default class GUI {
   startMenu: PIXI.Container;
   private gameOverScreen: PIXI.Container | null;

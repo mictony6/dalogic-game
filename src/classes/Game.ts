@@ -20,7 +20,7 @@ export default class Game {
   gui: GUI;
   constructor(
     size: number,
-    private gameMode: number,
+    public gameMode: number,
   ) {
     const app = new PIXI.Application({
       background: "#586770",
@@ -70,8 +70,8 @@ export default class Game {
       player1 = new Player(0xf9731c, 0);
       player2 = new AlphaBetaAI(0xeec811, 1, 7);
     } else if (this.gameMode === GAMEMODE.AIVsAI) {
-      player1 = new AlphaBetaAI(0xf9731c, 0, 7);
-      player2 = new AlphaBetaAI(0xeec811, 1, 7);
+      player1 = new RandomAI(0xf9731c, 0);
+      player2 = new RandomAI(0xeec811, 1);
     }
     player1!.direction = -1;
     this.players = [player1!, player2!];
@@ -172,5 +172,15 @@ export default class Game {
 
   setPlayers(player1: Player, player2: Player) {
     this.players = [player1, player2];
+  }
+
+  restart() {
+    this.createPlayers();
+    this.app.stage.removeChild(this.board.container);
+    this.board.container.destroy();
+    this.board = new Board(this.app);
+    this.board.initBoard();
+    this.board.initPieces(this.app, this.players[0], this.players[1]);
+    this.stateMachine.transitionTo(this.stateMachine.states.switchTurn);
   }
 }

@@ -1,15 +1,11 @@
 import Game from "./classes/Game";
 import "./styles.css";
-import { GAMEMODE } from "./classes/helpers";
-import { io } from "socket.io-client";
-import { Ticker } from "pixi.js";
+import { GAMEMODE, socket } from "./classes/helpers";
 import Player from "./classes/Player";
 import gameEventListener from "./classes/GameEventListener";
 import Move from "./classes/Move";
 import { GameEvent, MoveEvent, StateChangeEvent } from "./classes/GameEvent";
 
-// socket connection
-const socket = io("http://localhost:3000");
 socket.on("connect", () => {
   console.log("connected to server");
 });

@@ -4,6 +4,8 @@ const port = 3000;
 const path = require("path");
 const socketIO = require("socket.io");
 const http = require("http");
+const fastCsv = require("fast-csv");
+const fs = require("fs");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -92,9 +94,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("stateChange", (stateData) => {
-    console.log(stateData);
-  });
+  socket.on("stateChange", (stateData) => {});
 
   socket.on("move", (moveData) => {
     // invert the row and column of the move to be on the other side of the board
@@ -103,6 +103,11 @@ io.on("connection", (socket) => {
     moveData.destPos.row = 7 - moveData.destPos.row;
     moveData.destPos.column = 7 - moveData.destPos.column;
     socket.broadcast.emit("move", moveData);
+  });
+
+  socket.on("alphaBetaMetrics", (metrics) => {
+    console.log(metrics);
+    saveMetricsToCsv(metrics);
   });
 
   socket.on("disconnect", (reason) => {
@@ -123,6 +128,19 @@ function matchPlayers() {
       io.to(player.id).emit("matchFound", matchedPlayers);
     });
   }
+}
+
+function saveMetricsToCsv(rows) {
+  const csvStream = fs.createWriteStream("randomai_metrics.csv", {
+    flags: "a",
+  });
+
+  const csvOptions = { includeEndRowDelimiter: true };
+
+  fastCsv.writeToStream(csvStream, rows, csvOptions).on("finish", () => {
+    csvStream.close();
+    console.log("Metrics appended to alpha_beta_metrics.csv");
+  });
 }
 
 server.listen(port, () => {
