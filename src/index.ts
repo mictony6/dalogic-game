@@ -6,6 +6,7 @@ import gameEventListener from "./classes/GameEventListener";
 import Move from "./classes/Move";
 import { GameEvent, MoveEvent, StateChangeEvent } from "./classes/GameEvent";
 import bg from "./assets/bg.png";
+import titleSprite from "./assets/titleSprite.png";
 const body = document.querySelector("body")!;
 body.style.backgroundImage = `url(${bg})`;
 
@@ -24,33 +25,17 @@ const aiMatchButton = document.getElementById("aiMatchButton")!;
 
 let game!: Game;
 
+// button listeners
 aiMatchButton.onclick = () => {
-  if (game) {
-    game.removeFromStage();
-  }
-  game = new Game(8, GAMEMODE.AIVsAI);
-  game.createPlayers();
-  game.board.initPieces(game.app, game.players[0], game.players[1]);
-  game.stateMachine.transitionTo(game.stateMachine.states.onMenu);
+  document.location.replace("/ai-match");
 };
 
-// button listeners
 trainButton.onclick = () => {
-  if (game) {
-    game.removeFromStage();
-  }
-  game = new Game(8, GAMEMODE.PlayerVsAI);
-  game.createPlayers();
-  game.board.initPieces(game.app, game.players[0], game.players[1]);
-  game.stateMachine.transitionTo(game.stateMachine.states.onMenu);
+  document.location.replace("/training");
 };
 
 findMatchButton.onclick = () => {
-  if (game) {
-    game.removeFromStage();
-  }
-  game = new Game(8, GAMEMODE.PlayerVsPlayer);
-  socket.emit("joinGame");
+  document.location.replace("/player-match");
 };
 
 let playerId = 0;
@@ -129,3 +114,46 @@ socket.on("move", (moveData) => {
   game.currentPlayer.selectPiece(srcPos!.piece!, game.board);
   game.currentPlayer.selectTile(destPos!.tile, game.board);
 });
+
+function startAIMatch() {
+  if (game) {
+    game.removeFromStage();
+  }
+  game = new Game(8, GAMEMODE.AIVsAI);
+  game.createPlayers();
+  game.board.initPieces(game.app, game.players[0], game.players[1]);
+  game.stateMachine.transitionTo(game.stateMachine.states.onMenu);
+}
+
+function startPlayerMatch() {
+  if (game) {
+    game.removeFromStage();
+  }
+  game = new Game(8, GAMEMODE.PlayerVsPlayer);
+  socket.emit("joinGame");
+}
+
+function startTraining() {
+  if (game) {
+    game.removeFromStage();
+  }
+  game = new Game(8, GAMEMODE.PlayerVsAI);
+  game.createPlayers();
+  game.board.initPieces(game.app, game.players[0], game.players[1]);
+  game.stateMachine.transitionTo(game.stateMachine.states.onMenu);
+}
+
+switch (document.location.pathname) {
+  case "/":
+    let logoImageEl = document.getElementById("titleImage") as HTMLImageElement;
+    logoImageEl.src = titleSprite;
+  case "/ai-match":
+    startAIMatch();
+    break;
+  case "/player-match":
+    startPlayerMatch();
+    break;
+  case "/training":
+    startTraining();
+    break;
+}

@@ -13,12 +13,20 @@ app.use(express.static(path.join(__dirname, "build")));
 
 /* GET home page. */
 app.get("/", function (req, res, next) {
-  res.sendFile(path.join(process.cwd(), "build/index.html"));
+  res.sendFile(path.join(process.cwd(), "build/landing.html"));
 });
 
-// app.listen(port, () => {
-//   console.log(`Dalogic app listening at http://localhost:${port}`);
-// });
+app.get("/ai-match", (req, res) => {
+  res.sendFile(path.join(process.cwd(), "build/ai-match.html"));
+});
+
+app.get("/player-match", (req, res) => {
+  res.sendFile(path.join(process.cwd(), "build/player-match.html"));
+});
+
+app.get("/training", (req, res) => {
+  res.sendFile(path.join(process.cwd(), "build/training.html"));
+});
 
 const server = http.createServer(app);
 const io = new socketIO.Server(server);

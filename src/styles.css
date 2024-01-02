@@ -5,10 +5,9 @@
 
 }
 
-.container{
-    border: green 1px solid;
-}
-
+/*.container{*/
+/*    border: green 1px solid;*/
+/*}*/
 
 html{
     margin: 0;
@@ -67,4 +66,30 @@ ul {
 .main-wrapper{
     display: flex;
     flex-direction: row;
+}
+
+
+.nav{
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.menuButton{
+    margin: 12px 5px;
+    padding: 6px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: white;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.menuButton:hover{
+    background: rgba(0, 0, 0, 0.52);
+}
+
+#titleImage{
+    width: 100%;
 }

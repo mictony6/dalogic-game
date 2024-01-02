@@ -40,8 +40,10 @@ export default class Game {
     const canvasStyle = app.renderer.view.style;
     if (canvasStyle instanceof CSSStyleDeclaration) {
       // canvasStyle.position = "absolute";
-      // @ts-ignore
-      centerDiv!.appendChild(app.view);
+      if (centerDiv) {
+        // @ts-ignore
+        centerDiv.appendChild(app.view);
+      }
     } else {
       console.error("canvas style is not an instance of CSSStyleDeclaration");
     }
@@ -177,6 +179,18 @@ export default class Game {
   restart() {
     this.createPlayers();
     this.app.stage.removeChild(this.board.container);
+    const pieces = this.board.pieces;
+    for (let piece of pieces) {
+      if (piece.sprite) {
+        piece.sprite.destroy();
+      }
+    }
+
+    for (let tile of this.board.tiles) {
+      if (tile.sprite) {
+        tile.sprite.destroy();
+      }
+    }
     this.board.container.destroy();
     this.board = new Board(this.app);
     this.board.initBoard();

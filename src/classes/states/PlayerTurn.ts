@@ -13,35 +13,33 @@ export default class PlayerTurn implements TransitioningState {
       const player1 = game.getPlayers()[0];
       const player2 = game.getPlayers()[1];
 
-      // if (
-      //   game.gameMode === GAMEMODE.AIVsAI &&
-      //   (player1 instanceof AlphaBetaAI ||
-      //     player1 instanceof RandomAI ||
-      //     player1 instanceof MiniMaxAI)
-      // ) {
-      //   const averageSpeed = player1.speedSum / player1.numOfMoves;
-      //   socket.emit("alphaBetaMetrics", [
-      //     {
-      //       avgSpeed: averageSpeed,
-      //       iterations: player1.iterations,
-      //       avgIterationPerMove: player1.iterations / player1.numOfMoves,
-      //       win:
-      //         player1.score > player2.score
-      //           ? 1
-      //           : player1.score === player2.score
-      //             ? 0
-      //             : -1,
-      //     },
-      //   ]);
-      // }
+      if (
+        game.gameMode === GAMEMODE.AIVsAI &&
+        (player1 instanceof AlphaBetaAI ||
+          player1 instanceof RandomAI ||
+          player1 instanceof MiniMaxAI)
+      ) {
+        const averageSpeed = player1.speedSum / player1.numOfMoves;
+        socket.emit("alphaBetaMetrics", [
+          {
+            avgSpeed: averageSpeed,
+            iterations: player1.iterations,
+            avgIterationPerMove: player1.iterations / player1.numOfMoves,
+            win:
+              player1.score > player2.score
+                ? 1
+                : player1.score === player2.score
+                  ? 0
+                  : -1,
+          },
+        ]);
+      }
 
-      game.stateMachine.transitionTo(game.stateMachine.states.gameOver);
-
-      // if (game.gameMode === GAMEMODE.AIVsAI) {
-      //   game.restart();
-      // } else {
-      //   game.stateMachine.transitionTo(game.stateMachine.states.gameOver);
-      // }
+      if (game.gameMode === GAMEMODE.AIVsAI) {
+        game.restart();
+      } else {
+        game.stateMachine.transitionTo(game.stateMachine.states.gameOver);
+      }
     } else {
       game.currentPlayer.perform(game);
     }
