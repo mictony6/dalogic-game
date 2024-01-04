@@ -90,25 +90,67 @@ export default class GUI {
     // Get the array of players
     const players = game.getPlayers();
 
+    const you = game.getPlayers()[0];
+    const other = game.getPlayers()[1];
     // Find the player with the highest score
     const winner = players.reduce((prev, current) =>
       prev.score > current.score ? prev : current,
     );
 
-    // Create a game over text with winner information
-    const gameOverText = new PIXI.Text(
-      `Game Over\nWinner: Player ${winner.id}\nScore: ${winner.score}`,
-      {
-        fontFamily: "Arial",
-        fontSize: 36,
-        fill: 0xffffff,
-        align: "center",
-      },
-    );
-    gameOverText.anchor.set(0.5, 0.5);
-    gameOverText.position.set(app.renderer.width / 2, app.renderer.height / 2);
+    //check if winner is player 0
+    const youWon = winner.id === you.id;
 
-    return gameOverText;
+    if (youWon) {
+      // Create a game over text with winner information
+      const gameOverText = new PIXI.Text(
+        `You Won!\n Your Score: ${you.score}\nPlayer 2 Score: ${other.score}`,
+        {
+          fontFamily: "Arial",
+          fontSize: 36,
+          fill: 0xffffff,
+          align: "center",
+        },
+      );
+      gameOverText.anchor.set(0.5, 0.5);
+      gameOverText.position.set(
+        app.renderer.width / 2,
+        app.renderer.height / 2,
+      );
+
+      return gameOverText;
+    } else {
+      // Create a game over text with winner information
+      const gameOverText = new PIXI.Text(
+        `You Lost!\nYour Score: ${you.score}\nPlayer 2 Score: ${other.score}`,
+        {
+          fontFamily: "Arial",
+          fontSize: 36,
+          fill: 0xffffff,
+          align: "center",
+        },
+      );
+      gameOverText.anchor.set(0.5, 0.5);
+      gameOverText.position.set(
+        app.renderer.width / 2,
+        app.renderer.height / 2,
+      );
+
+      return gameOverText;
+    }
+    // // Create a game over text with winner information
+    // const gameOverText = new PIXI.Text(
+    //   `Game Over\nWinner: Player ${winner.id}\nScore: ${winner.score}`,
+    //   {
+    //     fontFamily: "Arial",
+    //     fontSize: 36,
+    //     fill: 0xffffff,
+    //     align: "center",
+    //   },
+    // );
+    // gameOverText.anchor.set(0.5, 0.5);
+    // gameOverText.position.set(app.renderer.width / 2, app.renderer.height / 2);
+    //
+    // return gameOverText;
   }
 
   private createWaitingScreen(game: Game) {

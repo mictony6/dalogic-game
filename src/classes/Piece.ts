@@ -1,8 +1,17 @@
-import { Application, Graphics, Sprite, Text, Ticker } from "pixi.js";
+import {
+  Application,
+  Graphics,
+  Sprite,
+  Text,
+  TextStyle,
+  Texture,
+  Ticker,
+} from "pixi.js";
 import Player from "./Player";
 import Move from "./Move";
 import Board from "./Board";
 import BoardPosition from "./BoardPosition";
+import pieceSpriteImg from "../assets/pieceSprite.png";
 
 export default class Piece {
   row: number;
@@ -11,7 +20,7 @@ export default class Piece {
   private _sprite: Sprite | undefined;
   private _player: Player;
   private _pieceValue: number = 0;
-  private text: Text | undefined;
+  text: Text | undefined;
   validMoves: Move[] | undefined;
   constructor(row: number, column: number, player: any) {
     this.row = row;
@@ -21,25 +30,33 @@ export default class Piece {
   }
 
   init(app: Application) {
-    const texture = new Graphics();
-    texture.beginFill(this._player.color);
-    texture.drawCircle(0, 0, this.size * 0.5);
-    texture.endFill();
-    this._sprite = new Sprite(app.renderer.generateTexture(texture));
+    // const texture = new Graphics();
+    // texture.beginFill(this._player.color);
+    // texture.drawCircle(0, 0, this.size * 0.5);
+    // texture.endFill();
+    // load piece sprite as texture
+    let texture = Texture.from(pieceSpriteImg);
+
+    this._sprite = new Sprite(texture);
+
+    // the image is 150x150, so we need to scale it down to 75x75
+    this._sprite.scale.set(0.5);
 
     this.text = new Text("null", {
-      fill: 0xffffff,
-      fontSize: 26,
+      fill: 0x000000,
+      fontSize: 26 * 1.5,
     });
 
     this.text.anchor.set(0.5);
-    const centerX = this._sprite.width / 2;
-    const centerY = this._sprite.height / 2;
+    const centerX = 150 / 2;
+    const centerY = 150 / 2;
+
+    console.log(centerX, centerY);
     // Position text at the center of the circle
     this.text.position.set(centerX, centerY);
-    this._sprite.addChild(this.text);
 
     this.pieceValue = Math.floor(Math.random() * 3);
+    this._sprite.addChild(this.text);
   }
 
   setPosition(row: any, column: any) {
@@ -139,7 +156,7 @@ export default class Piece {
    * @param {Object} destination
    */
   moveTowards(dest: BoardPosition) {
-    const SPEED = 20;
+    const SPEED = 5;
     const { deltaTime } = Ticker.shared;
     this._sprite!.x = this.moveToward(
       this._sprite!.x,

@@ -68,7 +68,9 @@ export default class Board {
         if (isTileWhite(this.rows - 1 - row, column)) {
           const piece = new Piece(this.rows - 1 - row, column, player1);
           piece.init(app);
-          if (piece.sprite) this.container.addChild(piece.sprite);
+          if (piece.sprite) {
+            this.container.addChild(piece.sprite);
+          }
           this.movePiecePosition(
             piece,
             this.getBoardPosition([this.rows - 1 - row, column])!,
