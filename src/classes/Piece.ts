@@ -38,13 +38,15 @@ export default class Piece {
     let texture = Texture.from(pieceSpriteImg);
 
     this._sprite = new Sprite(texture);
+    this._sprite.tint = this._player.color;
 
     // the image is 150x150, so we need to scale it down to 75x75
     this._sprite.scale.set(0.5);
 
     this.text = new Text("null", {
-      fill: 0x000000,
+      fill: 0xffffff,
       fontSize: 26 * 1.5,
+      fontWeight: "bold",
     });
 
     this.text.anchor.set(0.5);
