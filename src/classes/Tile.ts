@@ -17,6 +17,90 @@ let operations: Function[] = [
   OPERATIONS.XOR,
   OPERATIONS.NAND,
 ];
+
+const pattern = [
+  [
+    OPERATIONS.AND,
+    null,
+    OPERATIONS.XOR,
+    null,
+    OPERATIONS.NAND,
+    null,
+    OPERATIONS.OR,
+    null,
+  ],
+  [
+    null,
+    OPERATIONS.XOR,
+    null,
+    OPERATIONS.AND,
+    null,
+    OPERATIONS.OR,
+    null,
+    OPERATIONS.NAND,
+  ],
+  [
+    OPERATIONS.NAND,
+    null,
+    OPERATIONS.OR,
+    null,
+    OPERATIONS.AND,
+    null,
+    OPERATIONS.XOR,
+    null,
+  ],
+  [
+    null,
+    OPERATIONS.OR,
+    null,
+    OPERATIONS.NAND,
+    null,
+    OPERATIONS.XOR,
+    null,
+    OPERATIONS.AND,
+  ],
+  [
+    OPERATIONS.AND,
+    null,
+    OPERATIONS.XOR,
+    null,
+    OPERATIONS.NAND,
+    null,
+    OPERATIONS.OR,
+    null,
+  ],
+  [
+    null,
+    OPERATIONS.XOR,
+    null,
+    OPERATIONS.AND,
+    null,
+    OPERATIONS.OR,
+    null,
+    OPERATIONS.NAND,
+  ],
+  [
+    OPERATIONS.NAND,
+    null,
+    OPERATIONS.OR,
+    null,
+    OPERATIONS.AND,
+    null,
+    OPERATIONS.XOR,
+    null,
+  ],
+  [
+    null,
+    OPERATIONS.OR,
+    null,
+    OPERATIONS.NAND,
+    null,
+    OPERATIONS.XOR,
+    null,
+    OPERATIONS.AND,
+  ],
+];
+
 export default class Tile {
   _sprite: Sprite | undefined;
   readonly row: number;
@@ -35,7 +119,7 @@ export default class Tile {
     this.size = 75;
     this.color = (row + column) % 2 === 1 ? 0x282814 : 0x3c5028;
     this.id = row * 8 + column;
-    this.operation = operations[this.id % operations.length];
+    this.operation = pattern[this.row][this.column]!;
   }
 
   init(app: Application<ICanvas>) {
