@@ -1,11 +1,14 @@
 import TransitioningState from "./TransitioningState";
 import Game from "../Game";
+import gameEventListener from "../GameEventListener";
+import {ScoreEvent} from "../GameEvent";
 
 export default class SwitchTurn implements TransitioningState {
   name: string = "switchTurn";
 
   onEnter(game: Game): void {
     const prev = game.currentPlayer;
+    gameEventListener.trigger(new ScoreEvent(prev));
     if (prev) {
       prev.isTurn = false;
       const players = game.getPlayers();

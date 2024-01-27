@@ -58,6 +58,7 @@ export default class Move {
 
   undo(board: Board) {
     if (this.promotedPiece) {
+      // add back the removed piece
       board.addPieceAtPosition(this.promotedPiece, this.destPos);
       this.promotedPiece.player.addScore(-(this.promotedPiece.pieceValue + 1));
     }

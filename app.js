@@ -17,15 +17,15 @@ app.get("/", function (req, res, next) {
 });
 
 app.get("/ai-match", (req, res) => {
-  res.sendFile(path.join(process.cwd(), "build/ai-match.html"));
+  res.sendFile(path.join(process.cwd(), "build/match-page.html"));
 });
 
 app.get("/player-match", (req, res) => {
-  res.sendFile(path.join(process.cwd(), "build/player-match.html"));
+  res.sendFile(path.join(process.cwd(), "build/match-page.html"));
 });
 
 app.get("/training", (req, res) => {
-  res.sendFile(path.join(process.cwd(), "build/training.html"));
+  res.sendFile(path.join(process.cwd(), "build/match-page.html"));
 });
 
 const server = http.createServer(app);

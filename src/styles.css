@@ -93,3 +93,25 @@ ul {
 #titleImage{
     width: 100%;
 }
+
+.logPanel{
+    display:flex;
+    flex-direction:column;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    padding-bottom: 100px;
+}
+.scorePanel{
+    width: 320px;
+    min-height: 20%;
+    background: #d5d5d5;
+    border-left: 5px white solid;
+    border-top: 5px white solid;
+    border-right: 5px grey solid;
+    border-bottom: 5px grey solid;
+    border-radius: 6px;
+    box-shadow: black 0 0 10px;
+    padding: 12px;
+    margin: 0 6px;
+
+}
