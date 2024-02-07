@@ -13,7 +13,7 @@ export default class ExpectimaxAI extends Player {
   }
   perform(game: Game) {
     const start = performance.now();
-    let [bestScore, bestMove] = this.minimax(game, this.depth, true, null)!;
+    let [bestScore, bestMove] = this.expectimax(game, this.depth, true, null)!;
     const end = performance.now();
     console.log(`Time taken by minimax: ${end - start} milliseconds`);
     this.numOfMoves += 1;
@@ -27,7 +27,7 @@ export default class ExpectimaxAI extends Player {
     }
   }
 
-  private minimax(
+  private expectimax(
     game: Game,
     depth: number,
     maximizingPlayer: boolean,
