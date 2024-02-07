@@ -9,6 +9,7 @@ import MiniMaxAI from "./MiniMaxAI";
 import * as PIXI from "pixi.js";
 import { GAMEMODE } from "./helpers";
 import GUI from "./GUI";
+import ExpectimaxAI from "./ExpectimaxAI";
 export default class Game {
   board: Board;
   players!: Player[];
@@ -70,7 +71,7 @@ export default class Game {
       player2 = new Player(0xeec811, 1);
     } else if (this.gameMode === GAMEMODE.PlayerVsAI) {
       player1 = new Player(0xf9731c, 0);
-      player2 = new AlphaBetaAI(0xeec811, 1, 3);
+      player2 = new MiniMaxAI(0xeec811, 1, 3);
     } else if (this.gameMode === GAMEMODE.AIVsAI) {
       player1 = new RandomAI(0xf9731c, 0);
       player2 = new RandomAI(0xeec811, 1);

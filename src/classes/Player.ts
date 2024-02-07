@@ -13,6 +13,7 @@ export default class Player {
   direction: number = 1;
   public score: number = 0;
   selectedMove: Move | undefined;
+  public flipped: boolean = false;
   constructor(color: number, id: number) {
     this.color = color;
     this.id = id;

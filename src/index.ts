@@ -4,7 +4,12 @@ import { GAMEMODE, socket } from "./classes/helpers";
 import Player from "./classes/Player";
 import gameEventListener from "./classes/GameEventListener";
 import Move from "./classes/Move";
-import {GameEvent, MoveEvent, ScoreEvent, StateChangeEvent} from "./classes/GameEvent";
+import {
+  GameEvent,
+  MoveEvent,
+  ScoreEvent,
+  StateChangeEvent,
+} from "./classes/GameEvent";
 import bg from "./assets/bg.png";
 import titleSprite from "./assets/titleSprite.png";
 const body = document.querySelector("body")!;
@@ -82,6 +87,9 @@ socket.on("matchFound", (matchedPlayers) => {
     game.setPlayers(player!, new Player(0xeec811, otherPlayer.id));
   }
 
+  socket.on("flipBoard", () => {
+    player!.flipped = true;
+  });
   socket.emit("playerReady", { playerId: playerId, rows: 8, columns: 8 });
 });
 
@@ -157,26 +165,21 @@ switch (document.location.pathname) {
     startTraining();
     break;
 }
-function createScoreElement(playerId: string|number){
-  let scoreboard = document.getElementsByName('logPanel')[0]
-  if(scoreboard){
-    let newScorePanel =  document.createElement('div')
-    newScorePanel.className = 'scorePanel'
-    const nameEl = document.createElement('h4')
-    nameEl.innerText = `Player ${playerId}`
-    newScorePanel.appendChild(nameEl)
-    const scoreEl = document.createElement('p')
-    scoreEl.id = playerId.toString()
-    newScorePanel.appendChild(scoreEl)
-    scoreboard.appendChild(newScorePanel)
-
-
+function createScoreElement(playerId: string | number) {
+  let scoreboard = document.getElementsByName("logPanel")[0];
+  if (scoreboard) {
+    let newScorePanel = document.createElement("div");
+    newScorePanel.className = "scorePanel";
+    const nameEl = document.createElement("h4");
+    nameEl.innerText = `Player ${playerId}`;
+    newScorePanel.appendChild(nameEl);
+    const scoreEl = document.createElement("p");
+    scoreEl.id = playerId.toString();
+    newScorePanel.appendChild(scoreEl);
+    scoreboard.appendChild(newScorePanel);
   }
 }
-gameEventListener.on('score', (e: ScoreEvent) => {
+gameEventListener.on("score", (e: ScoreEvent) => {
   let player = e.scoringPlayer!;
-  console.log(player)
-
-
-
-})
+  console.log(player);
+});

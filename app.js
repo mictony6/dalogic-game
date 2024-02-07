@@ -135,6 +135,9 @@ function matchPlayers() {
     matchedPlayers.forEach((player) => {
       io.to(player.id).emit("matchFound", matchedPlayers);
     });
+
+    //tell player[1] to flip board
+    io.to(matchedPlayers[1].id).emit("flipBoard");
   }
 }
 
