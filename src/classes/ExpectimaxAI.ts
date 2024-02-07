@@ -47,7 +47,7 @@ export default class ExpectimaxAI extends Player {
       let moves = game.board.getAllValidMoves(this);
       for (let move of moves) {
         move.execute(game.board);
-        let currentEval = this.minimax(game, depth - 1, false, move)[0];
+        let currentEval = this.expectimax(game, depth - 1, false, move)[0];
         move.undo(game.board);
 
         if (currentEval > maxEval) {
@@ -66,7 +66,7 @@ export default class ExpectimaxAI extends Player {
       let total = 0;
       for (let move of moves) {
         move.execute(game.board);
-        let currentEval = this.minimax(game, depth - 1, true, move)[0];
+        let currentEval = this.expectimax(game, depth - 1, true, move)[0];
         move.undo(game.board);
 
         total += currentEval;
