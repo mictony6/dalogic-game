@@ -142,7 +142,7 @@ function matchPlayers() {
 }
 
 function saveMetricsToCsv(rows) {
-  const csvStream = fs.createWriteStream("randomai_metrics.csv", {
+  const csvStream = fs.createWriteStream("data.csv", {
     flags: "a",
   });
 

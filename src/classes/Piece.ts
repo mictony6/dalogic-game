@@ -158,7 +158,7 @@ export default class Piece {
    * @param {Object} destination
    */
   moveTowards(dest: BoardPosition) {
-    const SPEED = 5;
+    const SPEED = 200;
     const { deltaTime } = Ticker.shared;
     this._sprite!.x = this.moveToward(
       this._sprite!.x,
