@@ -155,6 +155,7 @@ switch (document.location.pathname) {
   case "/":
     let logoImageEl = document.getElementById("titleImage") as HTMLImageElement;
     logoImageEl.src = titleSprite;
+    break;
   case "/ai-match":
     startAIMatch();
     break;

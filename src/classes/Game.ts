@@ -156,20 +156,20 @@ export default class Game {
 
   evaluate() {
     const otherPlayer = this.players.find((p) => p != this.currentPlayer)!;
-    let p1NumOfPieces = 0;
-    let p2NumOfPieces = 0;
+    let currPlayerPieceWeights = 0;
+    let otherPlayerPieceWeights = 0;
 
     this.board.pieces.forEach((piece) => {
       if (piece.player === this.currentPlayer) {
-        p1NumOfPieces += 1;
+        currPlayerPieceWeights += piece.pieceValue;
       } else {
-        p2NumOfPieces += 1;
+        otherPlayerPieceWeights += piece.pieceValue;
       }
     });
     return (
       this.currentPlayer.score -
       otherPlayer.score +
-      (p1NumOfPieces - p2NumOfPieces) * 0.25
+      (currPlayerPieceWeights - otherPlayerPieceWeights)
     );
   }
 
