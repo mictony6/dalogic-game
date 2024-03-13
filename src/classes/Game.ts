@@ -73,7 +73,7 @@ export default class Game {
       player1 = new Player(0xf9731c, 0);
       player2 = new MiniMaxAI(0xeec811, 1, 3);
     } else if (this.gameMode === GAMEMODE.AIVsAI) {
-      player1 = new RandomAI(0xf9731c, 0);
+      player1 = new ExpectimaxAI(0xf9731c, 0, 3);
       player2 = new RandomAI(0xeec811, 1);
     }
     player1!.direction = -1;

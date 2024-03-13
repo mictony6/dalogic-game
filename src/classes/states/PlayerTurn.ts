@@ -4,6 +4,7 @@ import AlphaBetaAI from "../AlphaBetaAI";
 import { GAMEMODE, socket } from "../helpers";
 import RandomAI from "../RandomAI";
 import MiniMaxAI from "../MiniMaxAI";
+import ExpectimaxAI from "../ExpectimaxAI";
 
 export default class PlayerTurn implements TransitioningState {
   name: string = "playerTurn";
@@ -17,7 +18,8 @@ export default class PlayerTurn implements TransitioningState {
         game.gameMode === GAMEMODE.AIVsAI &&
         (player1 instanceof AlphaBetaAI ||
           player1 instanceof RandomAI ||
-          player1 instanceof MiniMaxAI)
+          player1 instanceof MiniMaxAI ||
+          player1 instanceof ExpectimaxAI)
       ) {
         const averageSpeed = player1.speedSum / player1.numOfMoves;
         socket.emit("alphaBetaMetrics", [

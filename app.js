@@ -150,7 +150,7 @@ function saveMetricsToCsv(rows) {
 
   fastCsv.writeToStream(csvStream, rows, csvOptions).on("finish", () => {
     csvStream.close();
-    console.log("Metrics appended to alpha_beta_metrics.csv");
+    console.log("Metrics appended to data.csv");
   });
 }
 
